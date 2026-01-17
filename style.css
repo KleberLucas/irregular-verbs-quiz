@@ -459,6 +459,134 @@ body {
     background: var(--primary-dark);
 }
 
+/* Botão Configurar Verbos */
+.config-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 12px 20px;
+    background: var(--card-bg);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+}
+
+.config-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Tela de Configuração */
+.config-container {
+    max-width: 1000px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.config-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.config-title {
+    font-size: 2rem;
+    font-weight: 700;
+    background: var(--bg-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.config-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.config-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.verb-count {
+    margin-left: auto;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.table-container {
+    flex: 1;
+    overflow-y: auto;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.verbs-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.verbs-table thead {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.verbs-table th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.verbs-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.verbs-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.verbs-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.checkbox-col {
+    width: 50px;
+    text-align: center;
+}
+
+.verbs-table input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.config-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .container {
@@ -487,6 +615,36 @@ body {
 
     .quiz-btn {
         flex-direction: column;
+        text-align: center;
+    }
+
+    .config-btn {
+        top: 10px;
+        left: 10px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .config-container {
+        max-height: 85vh;
+    }
+
+    .verbs-table {
+        font-size: 0.9rem;
+    }
+
+    .verbs-table th,
+    .verbs-table td {
+        padding: 10px 8px;
+    }
+
+    .config-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .verb-count {
+        margin-left: 0;
         text-align: center;
     }
 }

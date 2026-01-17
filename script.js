@@ -749,6 +749,137 @@ let results = {
     errors: []
 };
 
+// Gerenciamento de verbos ativos/inativos
+let activeVerbs = new Set(); // Armazena os índices dos verbos ativos
+
+// Carregar verbos ativos do localStorage
+function loadActiveVerbs() {
+    const saved = localStorage.getItem('activeVerbs');
+    if (saved) {
+        try {
+            const indices = JSON.parse(saved);
+            activeVerbs = new Set(indices);
+        } catch (e) {
+            // Se houver erro, inicializar com todos os verbos ativos
+            activeVerbs = new Set(verbs.map((_, index) => index));
+        }
+    } else {
+        // Inicializar com todos os verbos ativos
+        activeVerbs = new Set(verbs.map((_, index) => index));
+    }
+}
+
+// Salvar verbos ativos no localStorage
+function saveActiveVerbs() {
+    localStorage.setItem('activeVerbs', JSON.stringify(Array.from(activeVerbs)));
+}
+
+// Obter apenas os verbos ativos
+function getActiveVerbs() {
+    return verbs.filter((_, index) => activeVerbs.has(index));
+}
+
+// Abrir tela de configuração
+function openVerbConfig() {
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('quiz-mode1').classList.remove('active');
+    document.getElementById('quiz-mode2').classList.remove('active');
+    document.getElementById('results').classList.remove('active');
+    document.getElementById('verb-config').classList.add('active');
+    
+    renderVerbsTable();
+    updateVerbCount();
+}
+
+// Fechar tela de configuração
+function closeVerbConfig() {
+    document.getElementById('verb-config').classList.remove('active');
+    document.getElementById('menu').classList.add('active');
+}
+
+// Renderizar tabela de verbos
+function renderVerbsTable() {
+    const tbody = document.getElementById('verbs-table-body');
+    tbody.innerHTML = '';
+    
+    verbs.forEach((verb, index) => {
+        const row = document.createElement('tr');
+        const isActive = activeVerbs.has(index);
+        
+        row.innerHTML = `
+            <td class="checkbox-col">
+                <input type="checkbox" 
+                       data-verb-index="${index}" 
+                       ${isActive ? 'checked' : ''}
+                       onchange="toggleVerb(${index}, this.checked)">
+            </td>
+            <td>${verb.infinitivo}</td>
+            <td>${verb.past}</td>
+            <td>${verb.past_participle}</td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+    
+    // Atualizar checkbox "marcar todos"
+    const allChecked = verbs.every((_, index) => activeVerbs.has(index));
+    document.getElementById('select-all-checkbox').checked = allChecked;
+}
+
+// Alternar verbo individual
+function toggleVerb(index, isActive) {
+    if (isActive) {
+        activeVerbs.add(index);
+    } else {
+        activeVerbs.delete(index);
+    }
+    updateVerbCount();
+    
+    // Atualizar checkbox "marcar todos"
+    const allChecked = verbs.every((_, index) => activeVerbs.has(index));
+    document.getElementById('select-all-checkbox').checked = allChecked;
+}
+
+// Alternar todos os verbos
+function toggleAllVerbs(checked) {
+    if (checked) {
+        verbs.forEach((_, index) => activeVerbs.add(index));
+    } else {
+        activeVerbs.clear();
+    }
+    renderVerbsTable();
+    updateVerbCount();
+}
+
+// Marcar todos os verbos
+function selectAllVerbs() {
+    verbs.forEach((_, index) => activeVerbs.add(index));
+    renderVerbsTable();
+    updateVerbCount();
+}
+
+// Desmarcar todos os verbos
+function deselectAllVerbs() {
+    activeVerbs.clear();
+    renderVerbsTable();
+    updateVerbCount();
+}
+
+// Atualizar contador de verbos ativos
+function updateVerbCount() {
+    const count = activeVerbs.size;
+    document.getElementById('verb-count').textContent = `${count} verbo${count !== 1 ? 's' : ''} ativo${count !== 1 ? 's' : ''}`;
+}
+
+// Salvar configuração e voltar
+function saveVerbConfig() {
+    saveActiveVerbs();
+    closeVerbConfig();
+    
+    // Mostrar mensagem de sucesso
+    alert(`Configuração salva! ${activeVerbs.size} verbo${activeVerbs.size !== 1 ? 's' : ''} ativo${activeVerbs.size !== 1 ? 's' : ''}.`);
+}
+
 // Função para normalizar respostas (remover espaços, converter para minúsculas, lidar com alternativas)
 function normalizeAnswer(answer) {
     if (!answer) return '';
@@ -913,6 +1044,14 @@ function generateMisleadingOptions(correctAnswer, verbInfinitivo) {
 
 // Iniciar quiz
 function startQuiz(mode) {
+    // Verificar se há verbos ativos
+    const activeVerbsList = getActiveVerbs();
+    if (activeVerbsList.length === 0) {
+        alert('Por favor, ative pelo menos um verbo na configuração antes de iniciar o quiz.');
+        openVerbConfig();
+        return;
+    }
+    
     currentMode = mode;
     currentIndex = 0;
     results = {
@@ -921,8 +1060,8 @@ function startQuiz(mode) {
         errors: []
     };
     
-    // Embaralhar verbos
-    shuffledVerbs = shuffleArray([...verbs]);
+    // Embaralhar apenas verbos ativos
+    shuffledVerbs = shuffleArray([...activeVerbsList]);
     
     // Esconder menu e mostrar quiz apropriado
     document.getElementById('menu').classList.remove('active');
@@ -1187,4 +1326,5 @@ function restartQuiz() {
     startQuiz(currentMode);
 }
 
-// Verbos já estão carregados na constante acima
+// Inicializar sistema
+loadActiveVerbs();

@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Botão Configurar Verbos (fixo no topo) -->
+    <button class="config-btn" onclick="openVerbConfig()" title="Configurar Verbos">
+        ⚙️ Configurar Verbos
+    </button>
+
     <!-- Menu Principal -->
     <div id="menu" class="screen active">
         <div class="container">
@@ -83,6 +88,42 @@
                 <div class="options-container" id="options-container">
                     <!-- Opções serão inseridas via JavaScript -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Configuração de Verbos -->
+    <div id="verb-config" class="screen">
+        <div class="container config-container">
+            <div class="config-header">
+                <h1 class="config-title">⚙️ Configurar Verbos</h1>
+                <p class="config-subtitle">Desmarque os verbos que você já domina para não aparecerem nos quizzes</p>
+            </div>
+            <div class="config-actions">
+                <button class="btn-secondary" onclick="selectAllVerbs()">Marcar Todos</button>
+                <button class="btn-secondary" onclick="deselectAllVerbs()">Desmarcar Todos</button>
+                <span class="verb-count" id="verb-count">100 verbos ativos</span>
+            </div>
+            <div class="table-container">
+                <table class="verbs-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" id="select-all-checkbox" checked onchange="toggleAllVerbs(this.checked)">
+                            </th>
+                            <th>Infinitivo</th>
+                            <th>Past Simple</th>
+                            <th>Past Participle</th>
+                        </tr>
+                    </thead>
+                    <tbody id="verbs-table-body">
+                        <!-- Linhas serão inseridas via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="config-buttons">
+                <button class="btn-primary" onclick="saveVerbConfig()">Salvar e Voltar</button>
+                <button class="btn-secondary" onclick="closeVerbConfig()">Cancelar</button>
             </div>
         </div>
     </div>
