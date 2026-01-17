@@ -114,6 +114,11 @@ body {
     color: white;
 }
 
+.quiz-btn.mode3 {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
 .btn-icon {
     font-size: 3rem;
     flex-shrink: 0;
@@ -587,6 +592,204 @@ body {
     justify-content: center;
 }
 
+/* Flashcards - Modo 3 */
+.flashcard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.flashcard-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.flashcard-stats {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.small-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+}
+
+.flashcard-container {
+    perspective: 1000px;
+    margin-bottom: 40px;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flashcard {
+    width: 100%;
+    max-width: 500px;
+    height: 400px;
+    position: relative;
+    cursor: pointer;
+}
+
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    text-align: center;
+}
+
+.flashcard-front {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.flashcard-back {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.flashcard-label {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.flashcard-word {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.flashcard-hint {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: auto;
+    font-style: italic;
+}
+
+.flashcard-answer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.answer-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.answer-row.translation {
+    background: rgba(255, 255, 255, 0.15);
+    font-style: italic;
+}
+
+.answer-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.answer-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.flashcard-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.action-btn {
+    padding: 20px 15px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.action-btn:active {
+    transform: translateY(-1px);
+}
+
+.action-btn.easy {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.action-btn.good {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+}
+
+.action-btn.hard {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.action-btn.again {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.action-icon {
+    font-size: 2rem;
+}
+
+.action-label {
+    font-size: 0.9rem;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .container {
@@ -646,5 +849,29 @@ body {
     .verb-count {
         margin-left: 0;
         text-align: center;
+    }
+
+    .flashcard {
+        height: 350px;
+    }
+
+    .flashcard-word {
+        font-size: 2rem;
+    }
+
+    .answer-value {
+        font-size: 1.4rem;
+    }
+
+    .flashcard-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .action-btn {
+        padding: 15px 10px;
+    }
+
+    .action-icon {
+        font-size: 1.5rem;
     }
 }

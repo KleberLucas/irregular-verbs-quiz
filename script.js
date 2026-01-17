@@ -1044,14 +1044,6 @@ function generateMisleadingOptions(correctAnswer, verbInfinitivo) {
 
 // Iniciar quiz
 function startQuiz(mode) {
-    // Verificar se há verbos ativos
-    const activeVerbsList = getActiveVerbs();
-    if (activeVerbsList.length === 0) {
-        alert('Por favor, ative pelo menos um verbo na configuração antes de iniciar o quiz.');
-        openVerbConfig();
-        return;
-    }
-    
     currentMode = mode;
     currentIndex = 0;
     results = {
@@ -1060,19 +1052,35 @@ function startQuiz(mode) {
         errors: []
     };
     
-    // Embaralhar apenas verbos ativos
-    shuffledVerbs = shuffleArray([...activeVerbsList]);
-    
     // Esconder menu e mostrar quiz apropriado
     document.getElementById('menu').classList.remove('active');
     document.getElementById('quiz-mode1').classList.remove('active');
     document.getElementById('quiz-mode2').classList.remove('active');
+    document.getElementById('quiz-mode3').classList.remove('active');
     document.getElementById('results').classList.remove('active');
     
     if (mode === 1) {
+        // Verificar se há verbos ativos
+        const activeVerbsList = getActiveVerbs();
+        if (activeVerbsList.length === 0) {
+            alert('Por favor, ative pelo menos um verbo na configuração antes de iniciar o quiz.');
+            openVerbConfig();
+            return;
+        }
+        // Embaralhar apenas verbos ativos
+        shuffledVerbs = shuffleArray([...activeVerbsList]);
         document.getElementById('quiz-mode1').classList.add('active');
         loadQuestionMode1();
-    } else {
+    } else if (mode === 2) {
+        // Verificar se há verbos ativos
+        const activeVerbsList = getActiveVerbs();
+        if (activeVerbsList.length === 0) {
+            alert('Por favor, ative pelo menos um verbo na configuração antes de iniciar o quiz.');
+            openVerbConfig();
+            return;
+        }
+        // Embaralhar apenas verbos ativos
+        shuffledVerbs = shuffleArray([...activeVerbsList]);
         document.getElementById('quiz-mode2').classList.add('active');
         // Para o modo 2, criar perguntas duplicadas (uma para past, outra para past participle)
         const questions = [];
@@ -1082,6 +1090,10 @@ function startQuiz(mode) {
         });
         shuffledVerbs = shuffleArray(questions);
         loadQuestionMode2();
+    } else if (mode === 3) {
+        // Modo 3: Flashcards - usa TODOS os verbos, não filtra
+        document.getElementById('quiz-mode3').classList.add('active');
+        initializeFlashcards();
     }
 }
 
@@ -1318,6 +1330,10 @@ function showResults() {
 // Voltar ao menu
 function goToMenu() {
     document.getElementById('results').classList.remove('active');
+    document.getElementById('quiz-mode1').classList.remove('active');
+    document.getElementById('quiz-mode2').classList.remove('active');
+    document.getElementById('quiz-mode3').classList.remove('active');
+    document.getElementById('verb-config').classList.remove('active');
     document.getElementById('menu').classList.add('active');
 }
 
@@ -1326,5 +1342,245 @@ function restartQuiz() {
     startQuiz(currentMode);
 }
 
+// Sistema de Flashcards (Modo 3)
+let flashcardData = {}; // Armazena dados de cada verbo: { nextReview, interval, easeFactor, reviewCount }
+let flashcardQueue = []; // Fila de cartões para revisar
+let currentFlashcard = null;
+let flashcardIsFlipped = false;
+let failedCards = []; // Cartões que foram marcados como "Errei"
+
+// Carregar dados dos flashcards do localStorage
+function loadFlashcardData() {
+    const saved = localStorage.getItem('flashcardData');
+    if (saved) {
+        try {
+            flashcardData = JSON.parse(saved);
+            // Converter strings de data de volta para objetos Date
+            Object.keys(flashcardData).forEach(index => {
+                if (flashcardData[index].nextReview) {
+                    flashcardData[index].nextReview = new Date(flashcardData[index].nextReview);
+                }
+            });
+        } catch (e) {
+            flashcardData = {};
+        }
+    }
+}
+
+// Salvar dados dos flashcards no localStorage
+function saveFlashcardData() {
+    // Converter objetos Date para strings antes de salvar
+    const dataToSave = {};
+    Object.keys(flashcardData).forEach(index => {
+        dataToSave[index] = { ...flashcardData[index] };
+        if (dataToSave[index].nextReview instanceof Date) {
+            dataToSave[index].nextReview = dataToSave[index].nextReview.toISOString();
+        }
+    });
+    localStorage.setItem('flashcardData', JSON.stringify(dataToSave));
+}
+
+// Inicializar flashcards
+function initializeFlashcards() {
+    loadFlashcardData();
+    flashcardIsFlipped = false;
+    failedCards = [];
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Separar cartões em novos e para revisão
+    const newCards = [];
+    const reviewCards = [];
+    
+    verbs.forEach((verb, index) => {
+        const data = flashcardData[index] || {};
+        const nextReview = data.nextReview ? new Date(data.nextReview) : null;
+        
+        if (!nextReview || nextReview <= today) {
+            if (!nextReview) {
+                // Cartão novo
+                newCards.push({ verb, index });
+            } else {
+                // Cartão para revisão
+                reviewCards.push({ verb, index });
+            }
+        }
+    });
+    
+    // Embaralhar e combinar: novos primeiro, depois revisões
+    flashcardQueue = [
+        ...shuffleArray(newCards),
+        ...shuffleArray(reviewCards)
+    ];
+    
+    // Atualizar estatísticas
+    updateFlashcardStats();
+    
+    if (flashcardQueue.length === 0) {
+        alert('Parabéns! Não há cartões para revisar hoje. Todos os verbos estão agendados para o futuro.');
+        goToMenu();
+        return;
+    }
+    
+    loadNextFlashcard();
+}
+
+// Carregar próximo flashcard
+function loadNextFlashcard() {
+    if (flashcardQueue.length === 0 && failedCards.length === 0) {
+        // Sessão completa
+        showFlashcardResults();
+        return;
+    }
+    
+    // Se não há mais na fila mas há cartões que falharam, adicionar de volta
+    if (flashcardQueue.length === 0 && failedCards.length > 0) {
+        flashcardQueue = [...failedCards];
+        failedCards = [];
+    }
+    
+    currentFlashcard = flashcardQueue.shift();
+    flashcardIsFlipped = false;
+    
+    // Resetar animação do cartão
+    const card = document.getElementById('flashcard');
+    card.classList.remove('flipped');
+    
+    // Atualizar conteúdo
+    document.getElementById('flashcard-word-front').textContent = currentFlashcard.verb.infinitivo;
+    document.getElementById('flashcard-past').textContent = currentFlashcard.verb.past;
+    document.getElementById('flashcard-participle').textContent = currentFlashcard.verb.past_participle;
+    document.getElementById('flashcard-translation').textContent = currentFlashcard.verb.traducao;
+    
+    // Habilitar botões
+    document.querySelectorAll('.action-btn').forEach(btn => btn.disabled = false);
+    
+    // Atualizar contador
+    const remaining = flashcardQueue.length + failedCards.length;
+    const total = verbs.length;
+    document.getElementById('flashcard-counter').textContent = `${total - remaining} / ${total}`;
+}
+
+// Virar cartão
+function flipCard() {
+    if (flashcardIsFlipped) return;
+    
+    const card = document.getElementById('flashcard');
+    card.classList.add('flipped');
+    flashcardIsFlipped = true;
+}
+
+// Avaliar cartão (fácil, bom, difícil, errei)
+function rateCard(rating) {
+    if (!currentFlashcard) return;
+    
+    if (!flashcardIsFlipped) {
+        flipCard();
+        // Aguardar um pouco antes de permitir avaliar
+        setTimeout(() => rateCard(rating), 600);
+        return;
+    }
+    
+    const index = currentFlashcard.index;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let data = flashcardData[index] || {
+        interval: 0,
+        easeFactor: 2.5,
+        reviewCount: 0
+    };
+    
+    if (rating === 'again') {
+        // Errei - adicionar de volta à fila para revisar hoje
+        failedCards.push(currentFlashcard);
+        data.interval = 0;
+        data.easeFactor = Math.max(1.3, data.easeFactor - 0.2);
+    } else {
+        // Calcular novo intervalo baseado na avaliação
+        if (rating === 'easy') {
+            data.interval = Math.max(data.interval * 2.5, 4);
+            data.easeFactor = Math.min(2.5, data.easeFactor + 0.15);
+        } else if (rating === 'good') {
+            if (data.interval === 0) {
+                data.interval = 1;
+            } else {
+                data.interval = Math.floor(data.interval * data.easeFactor);
+            }
+            // easeFactor permanece o mesmo
+        } else if (rating === 'hard') {
+            if (data.interval === 0) {
+                data.interval = 0.5; // Revisar amanhã
+            } else {
+                data.interval = Math.max(1, Math.floor(data.interval * 1.2));
+            }
+            data.easeFactor = Math.max(1.3, data.easeFactor - 0.15);
+        }
+        
+        data.reviewCount = (data.reviewCount || 0) + 1;
+        
+        // Calcular próxima data de revisão
+        const nextReview = new Date(today);
+        nextReview.setDate(nextReview.getDate() + Math.ceil(data.interval));
+        data.nextReview = nextReview;
+    }
+    
+    flashcardData[index] = data;
+    saveFlashcardData();
+    
+    // Desabilitar botões temporariamente
+    document.querySelectorAll('.action-btn').forEach(btn => btn.disabled = true);
+    
+    // Próximo cartão após pequeno delay
+    setTimeout(() => {
+        loadNextFlashcard();
+    }, 500);
+}
+
+// Atualizar estatísticas dos flashcards
+function updateFlashcardStats() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let newCount = 0;
+    let reviewCount = 0;
+    
+    verbs.forEach((_, index) => {
+        const data = flashcardData[index] || {};
+        const nextReview = data.nextReview ? new Date(data.nextReview) : null;
+        
+        if (!nextReview) {
+            newCount++;
+        } else if (nextReview <= today) {
+            reviewCount++;
+        }
+    });
+    
+    document.getElementById('flashcard-stats').textContent = 
+        `Novos: ${newCount} | Revisão: ${reviewCount}`;
+}
+
+// Mostrar resultados dos flashcards
+function showFlashcardResults() {
+    document.getElementById('quiz-mode3').classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    
+    // Calcular estatísticas
+    const totalReviewed = Object.keys(flashcardData).filter(index => {
+        const data = flashcardData[index];
+        return data && data.reviewCount > 0;
+    }).length;
+    
+    document.getElementById('correct-answers').textContent = totalReviewed;
+    document.getElementById('wrong-answers').textContent = 0;
+    document.getElementById('percentage').textContent = '100%';
+    document.getElementById('total-questions').textContent = totalReviewed;
+    
+    // Esconder seção de erros
+    document.getElementById('errors-section').style.display = 'none';
+}
+
 // Inicializar sistema
 loadActiveVerbs();
+loadFlashcardData();

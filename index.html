@@ -32,6 +32,13 @@
                         <p>Escolha entre 4 alternativas</p>
                     </div>
                 </button>
+                <button class="quiz-btn mode3" onclick="startQuiz(3)">
+                    <div class="btn-icon">🃏</div>
+                    <div class="btn-content">
+                        <h2>Modo 3: Flashcards</h2>
+                        <p>Repetição espaçada com sistema Anki</p>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
@@ -124,6 +131,64 @@
             <div class="config-buttons">
                 <button class="btn-primary" onclick="saveVerbConfig()">Salvar e Voltar</button>
                 <button class="btn-secondary" onclick="closeVerbConfig()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modo 3: Flashcards -->
+    <div id="quiz-mode3" class="screen">
+        <div class="container">
+            <div class="flashcard-header">
+                <div class="flashcard-progress">
+                    <span id="flashcard-counter">0 / 0</span>
+                    <span class="flashcard-stats" id="flashcard-stats">Novos: 0 | Revisão: 0</span>
+                </div>
+                <button class="btn-secondary small-btn" onclick="goToMenu()">Voltar</button>
+            </div>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="flashcard-inner" id="flashcard-inner">
+                        <div class="flashcard-front" id="flashcard-front">
+                            <div class="flashcard-label">Infinitivo</div>
+                            <h1 class="flashcard-word" id="flashcard-word-front"></h1>
+                            <p class="flashcard-hint">Clique para virar</p>
+                        </div>
+                        <div class="flashcard-back" id="flashcard-back">
+                            <div class="flashcard-answer">
+                                <div class="answer-row">
+                                    <span class="answer-label">Past Simple:</span>
+                                    <span class="answer-value" id="flashcard-past"></span>
+                                </div>
+                                <div class="answer-row">
+                                    <span class="answer-label">Past Participle:</span>
+                                    <span class="answer-value" id="flashcard-participle"></span>
+                                </div>
+                                <div class="answer-row translation">
+                                    <span class="answer-label">Tradução:</span>
+                                    <span class="answer-value" id="flashcard-translation"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flashcard-actions" id="flashcard-actions">
+                <button class="action-btn easy" onclick="rateCard('easy')" id="btn-easy">
+                    <span class="action-icon">😊</span>
+                    <span class="action-label">Fácil</span>
+                </button>
+                <button class="action-btn good" onclick="rateCard('good')" id="btn-good">
+                    <span class="action-icon">👍</span>
+                    <span class="action-label">Bom</span>
+                </button>
+                <button class="action-btn hard" onclick="rateCard('hard')" id="btn-hard">
+                    <span class="action-icon">😓</span>
+                    <span class="action-label">Difícil</span>
+                </button>
+                <button class="action-btn again" onclick="rateCard('again')" id="btn-again">
+                    <span class="action-icon">❌</span>
+                    <span class="action-label">Errei</span>
+                </button>
             </div>
         </div>
     </div>
