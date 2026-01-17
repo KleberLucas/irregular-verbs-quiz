@@ -1,0 +1,740 @@
+[
+    {
+      "infinitivo": "to arise",
+      "past": "arose",
+      "past_participle": "arisen",
+      "traducao": "levantar-se"
+    },
+    {
+      "infinitivo": "to awake",
+      "past": "awoke",
+      "past_participle": "awoke",
+      "traducao": "acordar"
+    },
+    {
+      "infinitivo": "to bear",
+      "past": "bore",
+      "past_participle": "born/borne",
+      "traducao": "suportar / dar à luz, nascer"
+    },
+    {
+      "infinitivo": "to beat",
+      "past": "beat",
+      "past_participle": "beaten",
+      "traducao": "bater"
+    },
+    {
+      "infinitivo": "to become",
+      "past": "became",
+      "past_participle": "become",
+      "traducao": "tornar-se"
+    },
+    {
+      "infinitivo": "to begin",
+      "past": "began",
+      "past_participle": "begun",
+      "traducao": "começar"
+    },
+    {
+      "infinitivo": "to bend",
+      "past": "bent",
+      "past_participle": "bent",
+      "traducao": "dobrar"
+    },
+    {
+      "infinitivo": "to bet",
+      "past": "bet",
+      "past_participle": "bet",
+      "traducao": "apostar"
+    },
+    {
+      "infinitivo": "to bind",
+      "past": "bind",
+      "past_participle": "bind",
+      "traducao": "amarrar"
+    },
+    {
+      "infinitivo": "to bite",
+      "past": "bit",
+      "past_participle": "bitten",
+      "traducao": "morder, picar"
+    },
+    {
+      "infinitivo": "to bleed",
+      "past": "bled",
+      "past_participle": "bled",
+      "traducao": "sangrar"
+    },
+    {
+      "infinitivo": "to blow",
+      "past": "blew",
+      "past_participle": "blown",
+      "traducao": "soprar"
+    },
+    {
+      "infinitivo": "to bring",
+      "past": "brought",
+      "past_participle": "brought",
+      "traducao": "trazer"
+    },
+    {
+      "infinitivo": "to build",
+      "past": "built",
+      "past_participle": "built",
+      "traducao": "construir"
+    },
+    {
+      "infinitivo": "to burst",
+      "past": "burst",
+      "past_participle": "burst",
+      "traducao": "estourar, explodir"
+    },
+    {
+      "infinitivo": "to buy",
+      "past": "bought",
+      "past_participle": "bought",
+      "traducao": "comprar"
+    },
+    {
+      "infinitivo": "to cast",
+      "past": "cast",
+      "past_participle": "cast",
+      "traducao": "lançar"
+    },
+    {
+      "infinitivo": "to catch",
+      "past": "caught",
+      "past_participle": "caught",
+      "traducao": "pegar, apanhar"
+    },
+    {
+      "infinitivo": "to choose",
+      "past": "chose",
+      "past_participle": "chosen",
+      "traducao": "escolher"
+    },
+    {
+      "infinitivo": "to cling",
+      "past": "clung",
+      "past_participle": "clung",
+      "traducao": "agarrar, apegar-se"
+    },
+    {
+      "infinitivo": "to come",
+      "past": "came",
+      "past_participle": "come",
+      "traducao": "vir"
+    },
+    {
+      "infinitivo": "to cost",
+      "past": "cost",
+      "past_participle": "cost",
+      "traducao": "custar"
+    },
+    {
+      "infinitivo": "to creep",
+      "past": "crept",
+      "past_participle": "crept",
+      "traducao": "arrastar-se, rastejar"
+    },
+    {
+      "infinitivo": "to cut",
+      "past": "cut",
+      "past_participle": "cut",
+      "traducao": "cortar"
+    },
+    {
+      "infinitivo": "to deal",
+      "past": "dealt",
+      "past_participle": "dealt",
+      "traducao": "lidar, tratar"
+    },
+    {
+      "infinitivo": "to dig",
+      "past": "dug",
+      "past_participle": "dug",
+      "traducao": "cavar"
+    },
+    {
+      "infinitivo": "to do",
+      "past": "did",
+      "past_participle": "done",
+      "traducao": "fazer"
+    },
+    {
+      "infinitivo": "to draw",
+      "past": "drew",
+      "past_participle": "drawn",
+      "traducao": "desenhar, sacar"
+    },
+    {
+      "infinitivo": "to drink",
+      "past": "drank",
+      "past_participle": "drunk",
+      "traducao": "beber"
+    },
+    {
+      "infinitivo": "to drive",
+      "past": "drove",
+      "past_participle": "driven",
+      "traducao": "dirigir"
+    },
+    {
+      "infinitivo": "to eat",
+      "past": "ate",
+      "past_participle": "eaten",
+      "traducao": "comer"
+    },
+    {
+      "infinitivo": "to fall",
+      "past": "fell",
+      "past_participle": "fallen",
+      "traducao": "cair"
+    },
+    {
+      "infinitivo": "to feed",
+      "past": "fed",
+      "past_participle": "fed",
+      "traducao": "alimentar"
+    },
+    {
+      "infinitivo": "to feel",
+      "past": "felt",
+      "past_participle": "felt",
+      "traducao": "sentir"
+    },
+    {
+      "infinitivo": "to fight",
+      "past": "fought",
+      "past_participle": "fought",
+      "traducao": "brigar, lutar"
+    },
+    {
+      "infinitivo": "to find",
+      "past": "found",
+      "past_participle": "found",
+      "traducao": "encontrar"
+    },
+    {
+      "infinitivo": "to fling",
+      "past": "flung",
+      "past_participle": "flung",
+      "traducao": "arremessar, lançar"
+    },
+    {
+      "infinitivo": "to fly",
+      "past": "flew",
+      "past_participle": "flown",
+      "traducao": "voar"
+    },
+    {
+      "infinitivo": "to forget",
+      "past": "forgot",
+      "past_participle": "forgot/forgotten",
+      "traducao": "esquecer"
+    },
+    {
+      "infinitivo": "to forgive",
+      "past": "forgave",
+      "past_participle": "forgiven",
+      "traducao": "perdoar"
+    },
+    {
+      "infinitivo": "to freeze",
+      "past": "froze",
+      "past_participle": "frozen",
+      "traducao": "congelar"
+    },
+    {
+      "infinitivo": "to get",
+      "past": "got",
+      "past_participle": "got/gotten",
+      "traducao": "conseguir"
+    },
+    {
+      "infinitivo": "to give",
+      "past": "gave",
+      "past_participle": "given",
+      "traducao": "dar"
+    },
+    {
+      "infinitivo": "to grind",
+      "past": "ground",
+      "past_participle": "ground",
+      "traducao": "moer"
+    },
+    {
+      "infinitivo": "to grow",
+      "past": "grew",
+      "past_participle": "grown",
+      "traducao": "crescer"
+    },
+    {
+      "infinitivo": "to hang",
+      "past": "hung",
+      "past_participle": "hung",
+      "traducao": "pendurar"
+    },
+    {
+      "infinitivo": "to have",
+      "past": "had",
+      "past_participle": "had",
+      "traducao": "ter"
+    },
+    {
+      "infinitivo": "to hear",
+      "past": "heard",
+      "past_participle": "heard",
+      "traducao": "ouvir"
+    },
+    {
+      "infinitivo": "to hide",
+      "past": "hid",
+      "past_participle": "hidden",
+      "traducao": "esconder"
+    },
+    {
+      "infinitivo": "to hit",
+      "past": "hit",
+      "past_participle": "hit",
+      "traducao": "bater"
+    },
+    {
+      "infinitivo": "to hold",
+      "past": "held",
+      "past_participle": "held",
+      "traducao": "segurar, manter"
+    },
+    {
+      "infinitivo": "to hurt",
+      "past": "hurt",
+      "past_participle": "hurt",
+      "traducao": "ferir, machucar"
+    },
+    {
+      "infinitivo": "to keep",
+      "past": "kept",
+      "past_participle": "kept",
+      "traducao": "manter, guardar"
+    },
+    {
+      "infinitivo": "to know",
+      "past": "knew",
+      "past_participle": "known",
+      "traducao": "saber, conhecer"
+    },
+    {
+      "infinitivo": "to lay",
+      "past": "laid",
+      "past_participle": "laid",
+      "traducao": "pôr, colocar"
+    },
+    {
+      "infinitivo": "to lead",
+      "past": "led",
+      "past_participle": "led",
+      "traducao": "conduzir"
+    },
+    {
+      "infinitivo": "to leave",
+      "past": "left",
+      "past_participle": "left",
+      "traducao": "partir, deixar"
+    },
+    {
+      "infinitivo": "to lend",
+      "past": "lent",
+      "past_participle": "lent",
+      "traducao": "emprestar"
+    },
+    {
+      "infinitivo": "to let",
+      "past": "let",
+      "past_participle": "let",
+      "traducao": "deixar"
+    },
+    {
+      "infinitivo": "to lie",
+      "past": "lay",
+      "past_participle": "lain",
+      "traducao": "deitar-se, situar-se"
+    },
+    {
+      "infinitivo": "to light",
+      "past": "lit",
+      "past_participle": "lit",
+      "traducao": "acender"
+    },
+    {
+      "infinitivo": "to lose",
+      "past": "lost",
+      "past_participle": "lost",
+      "traducao": "perder"
+    },
+    {
+      "infinitivo": "to make",
+      "past": "made",
+      "past_participle": "made",
+      "traducao": "fazer"
+    },
+    {
+      "infinitivo": "to mean",
+      "past": "meant",
+      "past_participle": "meant",
+      "traducao": "significar"
+    },
+    {
+      "infinitivo": "to meet",
+      "past": "met",
+      "past_participle": "met",
+      "traducao": "encontrar"
+    },
+    {
+      "infinitivo": "to pay",
+      "past": "paid",
+      "past_participle": "paid",
+      "traducao": "pagar"
+    },
+    {
+      "infinitivo": "to quit",
+      "past": "quit",
+      "past_participle": "quit",
+      "traducao": "desistir, abandonar"
+    },
+    {
+      "infinitivo": "to read",
+      "past": "read",
+      "past_participle": "read",
+      "traducao": "ler"
+    },
+    {
+      "infinitivo": "to ride",
+      "past": "rode",
+      "past_participle": "ridden",
+      "traducao": "cavalgar, andar de"
+    },
+    {
+      "infinitivo": "to ring",
+      "past": "rang",
+      "past_participle": "rung",
+      "traducao": "tocar, soar"
+    },
+    {
+      "infinitivo": "to rise",
+      "past": "rose",
+      "past_participle": "risen",
+      "traducao": "levantar-se"
+    },
+    {
+      "infinitivo": "to run",
+      "past": "ran",
+      "past_participle": "run",
+      "traducao": "correr"
+    },
+    {
+      "infinitivo": "to say",
+      "past": "said",
+      "past_participle": "said",
+      "traducao": "dizer"
+    },
+    {
+      "infinitivo": "to see",
+      "past": "saw",
+      "past_participle": "seen",
+      "traducao": "ver"
+    },
+    {
+      "infinitivo": "to seek",
+      "past": "sought",
+      "past_participle": "sought",
+      "traducao": "procurar"
+    },
+    {
+      "infinitivo": "to sell",
+      "past": "sold",
+      "past_participle": "sold",
+      "traducao": "vender"
+    },
+    {
+      "infinitivo": "to send",
+      "past": "sent",
+      "past_participle": "sent",
+      "traducao": "enviar"
+    },
+    {
+      "infinitivo": "to set",
+      "past": "set",
+      "past_participle": "set",
+      "traducao": "ajustar, fixar"
+    },
+    {
+      "infinitivo": "to shake",
+      "past": "shook",
+      "past_participle": "shaken",
+      "traducao": "agitar"
+    },
+    {
+      "infinitivo": "to shine",
+      "past": "shone",
+      "past_participle": "shone",
+      "traducao": "brilhar"
+    },
+    {
+      "infinitivo": "to show",
+      "past": "showed",
+      "past_participle": "shown",
+      "traducao": "mostrar"
+    },
+    {
+      "infinitivo": "to shrink",
+      "past": "shrank",
+      "past_participle": "shrunk",
+      "traducao": "encolher"
+    },
+    {
+      "infinitivo": "to shut",
+      "past": "shut",
+      "past_participle": "shut",
+      "traducao": "fechar"
+    },
+    {
+      "infinitivo": "to sing",
+      "past": "sang",
+      "past_participle": "sung",
+      "traducao": "cantar"
+    },
+    {
+      "infinitivo": "to sink",
+      "past": "sank",
+      "past_participle": "sunk",
+      "traducao": "afundar"
+    },
+    {
+      "infinitivo": "to sit",
+      "past": "sat",
+      "past_participle": "sat",
+      "traducao": "sentar-se"
+    },
+    {
+      "infinitivo": "to sleep",
+      "past": "slept",
+      "past_participle": "slept",
+      "traducao": "dormir"
+    },
+    {
+      "infinitivo": "to slide",
+      "past": "slid",
+      "past_participle": "slid",
+      "traducao": "escorregar"
+    },
+    {
+      "infinitivo": "to slit",
+      "past": "slit",
+      "past_participle": "slit",
+      "traducao": "fender, cortar"
+    },
+    {
+      "infinitivo": "to speak",
+      "past": "spoke",
+      "past_participle": "spoken",
+      "traducao": "falar"
+    },
+    {
+      "infinitivo": "to speed",
+      "past": "sped",
+      "past_participle": "sped",
+      "traducao": "correr"
+    },
+    {
+      "infinitivo": "to spend",
+      "past": "spent",
+      "past_participle": "spent",
+      "traducao": "gastar"
+    },
+    {
+      "infinitivo": "to spin",
+      "past": "spun",
+      "past_participle": "spun",
+      "traducao": "girar"
+    },
+    {
+      "infinitivo": "to split",
+      "past": "split",
+      "past_participle": "split",
+      "traducao": "dividir, partir"
+    },
+    {
+      "infinitivo": "to spread",
+      "past": "spread",
+      "past_participle": "spread",
+      "traducao": "espalhar"
+    },
+    {
+      "infinitivo": "to spring",
+      "past": "sprang",
+      "past_participle": "sprung",
+      "traducao": "saltar, pular"
+    },
+    {
+      "infinitivo": "to stand",
+      "past": "stood",
+      "past_participle": "stood",
+      "traducao": "ficar, permanecer"
+    },
+    {
+      "infinitivo": "to steal",
+      "past": "stole",
+      "past_participle": "stolen",
+      "traducao": "roubar"
+    },
+    {
+      "infinitivo": "to stick",
+      "past": "stuck",
+      "past_participle": "stuck",
+      "traducao": "grudar"
+    },
+    {
+      "infinitivo": "to sting",
+      "past": "stung",
+      "past_participle": "stung",
+      "traducao": "picar, ferroar"
+    },
+    {
+      "infinitivo": "to strike",
+      "past": "struck",
+      "past_participle": "struck",
+      "traducao": "bater, golpear"
+    },
+    {
+      "infinitivo": "to string",
+      "past": "strung",
+      "past_participle": "strung",
+      "traducao": "amarrar"
+    },
+    {
+      "infinitivo": "to swear",
+      "past": "swore",
+      "past_participle": "sworn",
+      "traducao": "jurar"
+    },
+    {
+      "infinitivo": "to sweep",
+      "past": "swept",
+      "past_participle": "swept",
+      "traducao": "varrer"
+    },
+    {
+      "infinitivo": "to swim",
+      "past": "swam",
+      "past_participle": "swum",
+      "traducao": "nadar"
+    },
+    {
+      "infinitivo": "to swing",
+      "past": "swang",
+      "past_participle": "swung",
+      "traducao": "balançar"
+    },
+    {
+      "infinitivo": "to take",
+      "past": "took",
+      "past_participle": "taken",
+      "traducao": "tomar, levar"
+    },
+    {
+      "infinitivo": "to teach",
+      "past": "taught",
+      "past_participle": "taught",
+      "traducao": "ensinar"
+    },
+    {
+      "infinitivo": "to tear",
+      "past": "tore",
+      "past_participle": "torn",
+      "traducao": "rasgar"
+    },
+    {
+      "infinitivo": "to tell",
+      "past": "told",
+      "past_participle": "told",
+      "traducao": "contar"
+    },
+    {
+      "infinitivo": "to think",
+      "past": "thought",
+      "past_participle": "thought",
+      "traducao": "pensar"
+    },
+    {
+      "infinitivo": "to throw",
+      "past": "threw",
+      "past_participle": "thrown",
+      "traducao": "arremessar, atirar"
+    },
+    {
+      "infinitivo": "to understand",
+      "past": "understood",
+      "past_participle": "understood",
+      "traducao": "entender"
+    },
+    {
+      "infinitivo": "to wake",
+      "past": "woke",
+      "past_participle": "woken",
+      "traducao": "acordar"
+    },
+    {
+      "infinitivo": "to wear",
+      "past": "wore",
+      "past_participle": "worn",
+      "traducao": "usar"
+    },
+    {
+      "infinitivo": "to weave",
+      "past": "wove",
+      "past_participle": "woven",
+      "traducao": "tecer"
+    },
+    {
+      "infinitivo": "to wed",
+      "past": "wed",
+      "past_participle": "wed",
+      "traducao": "casar"
+    },
+    {
+      "infinitivo": "to weep",
+      "past": "wept",
+      "past_participle": "wept",
+      "traducao": "chorar"
+    },
+    {
+      "infinitivo": "to wet",
+      "past": "wet",
+      "past_participle": "wet",
+      "traducao": "molhar"
+    },
+    {
+      "infinitivo": "to win",
+      "past": "won",
+      "past_participle": "won",
+      "traducao": "vencer"
+    },
+    {
+      "infinitivo": "to wind",
+      "past": "wound",
+      "past_participle": "wound",
+      "traducao": "dar corda, serpentear"
+    },
+    {
+      "infinitivo": "to wring",
+      "past": "wrung",
+      "past_participle": "wrung",
+      "traducao": "retorcer-se, espremer"
+    },
+    {
+      "infinitivo": "to write",
+      "past": "wrote",
+      "past_participle": "written",
+      "traducao": "escrever"
+    }
+  ]

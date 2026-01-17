@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irregular Verbs Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Menu Principal -->
+    <div id="menu" class="screen active">
+        <div class="container">
+            <h1 class="title">📚 Irregular Verbs Quiz</h1>
+            <p class="subtitle">Escolha um modo de quiz para praticar seus verbos irregulares</p>
+            <div class="menu-buttons">
+                <button class="quiz-btn mode1" onclick="startQuiz(1)">
+                    <div class="btn-icon">✍️</div>
+                    <div class="btn-content">
+                        <h2>Modo 1: Digitação</h2>
+                        <p>Digite o Past Simple e Past Participle</p>
+                    </div>
+                </button>
+                <button class="quiz-btn mode2" onclick="startQuiz(2)">
+                    <div class="btn-icon">🎯</div>
+                    <div class="btn-content">
+                        <h2>Modo 2: Múltipla Escolha</h2>
+                        <p>Escolha entre 4 alternativas</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modo 1: Digitação -->
+    <div id="quiz-mode1" class="screen">
+        <div class="container">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress1"></div>
+                </div>
+                <div class="quiz-info">
+                    <span class="question-counter" id="counter1">1 / 100</span>
+                </div>
+            </div>
+            <div class="quiz-content">
+                <div class="verb-display">
+                    <h2 class="verb-title">Verbo no Infinitivo:</h2>
+                    <h1 class="verb-word" id="verb1"></h1>
+                    <p class="verb-translation" id="translation1"></p>
+                </div>
+                <form id="form-mode1" class="quiz-form">
+                    <div class="input-group">
+                        <label for="past-input">Past Simple:</label>
+                        <input type="text" id="past-input" class="quiz-input" autocomplete="off" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="participle-input">Past Participle:</label>
+                        <input type="text" id="participle-input" class="quiz-input" autocomplete="off" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Verificar Resposta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modo 2: Múltipla Escolha -->
+    <div id="quiz-mode2" class="screen">
+        <div class="container">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress2"></div>
+                </div>
+                <div class="quiz-info">
+                    <span class="question-counter" id="counter2">1 / 200</span>
+                </div>
+            </div>
+            <div class="quiz-content">
+                <div class="verb-display">
+                    <h2 class="verb-title" id="question-type2"></h2>
+                    <h1 class="verb-word" id="verb2"></h1>
+                    <p class="verb-translation" id="translation2"></p>
+                </div>
+                <div class="options-container" id="options-container">
+                    <!-- Opções serão inseridas via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Resultados -->
+    <div id="results" class="screen">
+        <div class="container">
+            <div class="results-header">
+                <h1 class="results-title">📊 Resultados do Quiz</h1>
+            </div>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="correct-answers">0</div>
+                    <div class="stat-label">Acertos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-value" id="wrong-answers">0</div>
+                    <div class="stat-label">Erros</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="percentage">0%</div>
+                    <div class="stat-label">Taxa de Acerto</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-value" id="total-questions">0</div>
+                    <div class="stat-label">Total de Questões</div>
+                </div>
+            </div>
+            <div class="errors-section" id="errors-section">
+                <h2 class="errors-title">Erros Cometidos:</h2>
+                <div class="errors-list" id="errors-list">
+                    <!-- Erros serão inseridos via JavaScript -->
+                </div>
+            </div>
+            <div class="results-buttons">
+                <button class="btn-primary" onclick="goToMenu()">Voltar ao Menu</button>
+                <button class="btn-secondary" onclick="restartQuiz()">Refazer Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
