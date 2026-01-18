@@ -1440,12 +1440,29 @@ function loadNextFlashcard() {
         failedCards = [];
     }
     
+    const card = document.getElementById('flashcard');
+    const wasFlipped = card.classList.contains('flipped');
+    
+    // Se o cartão estava virado, primeiro virar de volta e aguardar animação
+    if (wasFlipped) {
+        // Remover classe flipped para iniciar animação de virar de volta
+        card.classList.remove('flipped');
+        flashcardIsFlipped = false;
+        
+        // Aguardar animação terminar (0.6s conforme CSS) antes de atualizar conteúdo
+        setTimeout(() => {
+            updateFlashcardContent();
+        }, 600);
+    } else {
+        // Se não estava virado, atualizar imediatamente
+        updateFlashcardContent();
+    }
+}
+
+// Atualizar conteúdo do flashcard
+function updateFlashcardContent() {
     currentFlashcard = flashcardQueue.shift();
     flashcardIsFlipped = false;
-    
-    // Resetar animação do cartão
-    const card = document.getElementById('flashcard');
-    card.classList.remove('flipped');
     
     // Atualizar conteúdo
     document.getElementById('flashcard-word-front').textContent = currentFlashcard.verb.infinitivo;
