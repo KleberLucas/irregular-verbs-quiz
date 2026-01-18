@@ -7,17 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Botão Configurar Verbos (fixo no topo) -->
-    <button class="config-btn" onclick="openVerbConfig()" title="Configurar Verbos">
-        ⚙️ Configurar Verbos
-    </button>
+    <!-- Botões de Configuração (fixos no topo) -->
+    <div class="config-buttons-top">
+        <button class="config-btn" onclick="openVerbConfig()" title="Configurar Verbos">
+            ⚙️ Configurar Verbos
+        </button>
+        <button class="config-btn" onclick="openPrepositionalVerbConfig()" title="Configurar Prepositional Verbs">
+            ⚙️ Configurar Prepositional Verbs
+        </button>
+    </div>
 
     <!-- Menu Principal -->
     <div id="menu" class="screen active">
         <div class="container">
-            <h1 class="title">📚 Irregular Verbs Quiz</h1>
-            <p class="subtitle">Escolha um modo de quiz para praticar seus verbos irregulares</p>
-            <div class="menu-buttons">
+            <h1 class="title">📚 English Verbs Quiz</h1>
+            <p class="subtitle">Escolha uma categoria e modo de quiz</p>
+            <div class="category-section">
+                <h2 class="category-title">Irregular Verbs</h2>
+                <div class="menu-buttons">
                 <button class="quiz-btn mode1" onclick="startQuiz(1)">
                     <div class="btn-icon">✍️</div>
                     <div class="btn-content">
@@ -39,6 +46,33 @@
                         <p>Repetição espaçada com sistema Anki</p>
                     </div>
                 </button>
+                </div>
+            </div>
+            <div class="category-section">
+                <h2 class="category-title">Prepositional Verbs</h2>
+                <div class="menu-buttons">
+                <button class="quiz-btn mode1" onclick="startPrepositionalQuiz(1)">
+                    <div class="btn-icon">✍️</div>
+                    <div class="btn-content">
+                        <h2>Modo 1: Digitação</h2>
+                        <p>Digite o verbo + preposição</p>
+                    </div>
+                </button>
+                <button class="quiz-btn mode2" onclick="startPrepositionalQuiz(2)">
+                    <div class="btn-icon">🎯</div>
+                    <div class="btn-content">
+                        <h2>Modo 2: Múltipla Escolha</h2>
+                        <p>Escolha a preposição correta</p>
+                    </div>
+                </button>
+                <button class="quiz-btn mode3" onclick="startPrepositionalQuiz(3)">
+                    <div class="btn-icon">🃏</div>
+                    <div class="btn-content">
+                        <h2>Modo 3: Flashcards</h2>
+                        <p>Repetição espaçada com sistema Anki</p>
+                    </div>
+                </button>
+                </div>
             </div>
         </div>
     </div>
@@ -186,6 +220,150 @@
                     <span class="action-label">Difícil</span>
                 </button>
                 <button class="action-btn again" onclick="rateCard('again')" id="btn-again">
+                    <span class="action-icon">❌</span>
+                    <span class="action-label">Errei</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Configuração de Prepositional Verbs -->
+    <div id="prepositional-verb-config" class="screen">
+        <div class="container config-container">
+            <div class="config-header">
+                <h1 class="config-title">⚙️ Configurar Prepositional Verbs</h1>
+                <p class="config-subtitle">Desmarque os verbos que você já domina para não aparecerem nos quizzes</p>
+            </div>
+            <div class="config-actions">
+                <button class="btn-secondary" onclick="selectAllPrepositionalVerbs()">Marcar Todos</button>
+                <button class="btn-secondary" onclick="deselectAllPrepositionalVerbs()">Desmarcar Todos</button>
+                <span class="verb-count" id="prepositional-verb-count">0 verbos ativos</span>
+            </div>
+            <div class="table-container">
+                <table class="verbs-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" id="select-all-prepositional-checkbox" checked onchange="toggleAllPrepositionalVerbs(this.checked)">
+                            </th>
+                            <th>Verbo</th>
+                            <th>Preposição</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prepositional-verbs-table-body">
+                        <!-- Linhas serão inseridas via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="config-buttons">
+                <button class="btn-primary" onclick="savePrepositionalVerbConfig()">Salvar e Voltar</button>
+                <button class="btn-secondary" onclick="closePrepositionalVerbConfig()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prepositional Verbs - Quiz Modo 1: Digitação -->
+    <div id="prepositional-quiz-mode1" class="screen">
+        <div class="container">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="prepositional-progress1"></div>
+                </div>
+                <div class="quiz-info">
+                    <span class="question-counter" id="prepositional-counter1">1 / 100</span>
+                </div>
+            </div>
+            <div class="quiz-content">
+                <div class="verb-display">
+                    <h2 class="verb-title">Tradução:</h2>
+                    <h1 class="verb-word" id="prepositional-translation1"></h1>
+                    <p class="verb-translation" id="prepositional-example1"></p>
+                </div>
+                <form id="form-prepositional-mode1" class="quiz-form">
+                    <div class="input-group">
+                        <label for="prepositional-input">Verbo + Preposição:</label>
+                        <input type="text" id="prepositional-input" class="quiz-input" autocomplete="off" required placeholder="Ex: worry about">
+                    </div>
+                    <button type="submit" class="submit-btn">Verificar Resposta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prepositional Verbs - Quiz Modo 2: Múltipla Escolha -->
+    <div id="prepositional-quiz-mode2" class="screen">
+        <div class="container">
+            <div class="quiz-header">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="prepositional-progress2"></div>
+                </div>
+                <div class="quiz-info">
+                    <span class="question-counter" id="prepositional-counter2">1 / 100</span>
+                </div>
+            </div>
+            <div class="quiz-content">
+                <div class="verb-display">
+                    <h2 class="verb-title">Tradução:</h2>
+                    <h1 class="verb-word" id="prepositional-translation2"></h1>
+                    <p class="verb-translation" id="prepositional-example2"></p>
+                    <p class="verb-title" style="margin-top: 20px;">Verbo:</p>
+                    <h2 class="verb-word" style="font-size: 2rem;" id="prepositional-verb2"></h2>
+                </div>
+                <div class="options-container" id="prepositional-options-container">
+                    <!-- Opções serão inseridas via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prepositional Verbs - Quiz Modo 3: Flashcards -->
+    <div id="prepositional-quiz-mode3" class="screen">
+        <div class="container">
+            <div class="flashcard-header">
+                <div class="flashcard-progress">
+                    <span id="prepositional-flashcard-counter">0 / 0</span>
+                    <span class="flashcard-stats" id="prepositional-flashcard-stats">Novos: 0 | Revisão: 0</span>
+                </div>
+                <button class="btn-secondary small-btn" onclick="goToMenu()">Voltar</button>
+            </div>
+            <div class="flashcard-container">
+                <div class="flashcard" id="prepositional-flashcard" onclick="flipPrepositionalCard()">
+                    <div class="flashcard-inner" id="prepositional-flashcard-inner">
+                        <div class="flashcard-front" id="prepositional-flashcard-front">
+                            <div class="flashcard-label">Tradução</div>
+                            <h1 class="flashcard-word" id="prepositional-flashcard-translation"></h1>
+                            <p class="flashcard-hint" id="prepositional-flashcard-example-pt"></p>
+                            <p class="flashcard-hint" style="margin-top: 20px;">Clique para virar</p>
+                        </div>
+                        <div class="flashcard-back" id="prepositional-flashcard-back">
+                            <div class="flashcard-answer">
+                                <div class="answer-row">
+                                    <span class="answer-label">Verbo + Preposição:</span>
+                                    <span class="answer-value" id="prepositional-flashcard-answer"></span>
+                                </div>
+                                <div class="answer-row translation">
+                                    <span class="answer-label">Exemplo (EN):</span>
+                                    <span class="answer-value" id="prepositional-flashcard-example-en"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flashcard-actions" id="prepositional-flashcard-actions">
+                <button class="action-btn easy" onclick="ratePrepositionalCard('easy')" id="prepositional-btn-easy">
+                    <span class="action-icon">😊</span>
+                    <span class="action-label">Fácil</span>
+                </button>
+                <button class="action-btn good" onclick="ratePrepositionalCard('good')" id="prepositional-btn-good">
+                    <span class="action-icon">👍</span>
+                    <span class="action-label">Bom</span>
+                </button>
+                <button class="action-btn hard" onclick="ratePrepositionalCard('hard')" id="prepositional-btn-hard">
+                    <span class="action-icon">😓</span>
+                    <span class="action-label">Difícil</span>
+                </button>
+                <button class="action-btn again" onclick="ratePrepositionalCard('again')" id="prepositional-btn-again">
                     <span class="action-icon">❌</span>
                     <span class="action-label">Errei</span>
                 </button>

@@ -50,8 +50,8 @@ const verbs = [
     },
     {
       "infinitivo": "to bind",
-      "past": "bind",
-      "past_participle": "bind",
+      "past": "bound",
+      "past_participle": "bound",
       "traducao": "amarrar"
     },
     {
@@ -740,10 +740,480 @@ const verbs = [
     }
 ];
 
+// Dados dos Prepositional Verbs (incluídos diretamente para evitar problemas com CORS)
+const prepositionalVerbsRaw = [
+    { "verb": "account", "preposition": "for" },
+    { "verb": "allude", "preposition": "to" },
+    { "verb": "approve", "preposition": "of" },
+    { "verb": "aspire", "preposition": "to" },
+    { "verb": "atone", "preposition": "for" },
+    { "verb": "apologize", "preposition": "for/to" },
+    { "verb": "apply", "preposition": "for/to" },
+    { "verb": "argue", "preposition": "about/for/against/with/over" },
+    { "verb": "arrange", "preposition": "for" },
+    { "verb": "ascend", "preposition": "toward" },
+    { "verb": "assign", "preposition": "to", "separable": true },
+    { "verb": "assist", "preposition": "with" },
+    { "verb": "attach", "preposition": "to", "separable": true },
+    { "verb": "attempt", "preposition": "to" },
+    { "verb": "attest", "preposition": "to" },
+    { "verb": "attract", "preposition": "to/by", "separable": true },
+    { "verb": "augment", "preposition": "with", "separable": true },
+    { "verb": "awaken", "preposition": "from" },
+    { "verb": "balk", "preposition": "at" },
+    { "verb": "ban", "preposition": "from", "separable": true },
+    { "verb": "banish", "preposition": "from", "separable": true },
+    { "verb": "banter", "preposition": "with/about" },
+    { "verb": "bar", "preposition": "from", "separable": true },
+    { "verb": "bark", "preposition": "at" },
+    { "verb": "bask", "preposition": "in" },
+    { "verb": "beg", "preposition": "for", "separable": true },
+    { "verb": "bicker", "preposition": "with" },
+    { "verb": "bid", "preposition": "for" },
+    { "verb": "bilk", "preposition": "out of" },
+    { "verb": "bite", "preposition": "into" },
+    { "verb": "blame", "preposition": "for/on/upon", "separable": true },
+    { "verb": "block", "preposition": "from", "separable": true },
+    { "verb": "blossom", "preposition": "into" },
+    { "verb": "blot", "preposition": "out", "separable": true },
+    { "verb": "bore", "preposition": "into" },
+    { "verb": "brace", "preposition": "for", "separable": true },
+    { "verb": "brood", "preposition": "about" },
+    { "verb": "burden", "preposition": "with", "separable": true },
+    { "verb": "burrow", "preposition": "into/under" },
+    { "verb": "cavort", "preposition": "with" },
+    { "verb": "coerce", "preposition": "into", "separable": true },
+    { "verb": "coincide", "preposition": "with" },
+    { "verb": "collaborate", "preposition": "with" },
+    { "verb": "collide", "preposition": "with" },
+    { "verb": "comment", "preposition": "about" },
+    { "verb": "compare", "preposition": "with/to", "separable": true },
+    { "verb": "compete", "preposition": "with/against" },
+    { "verb": "complain", "preposition": "about/of" },
+    { "verb": "complement", "preposition": "with", "separable": true },
+    { "verb": "comply", "preposition": "with" },
+    { "verb": "conceal", "preposition": "from", "separable": true },
+    { "verb": "concentrate", "preposition": "on" },
+    { "verb": "concur", "preposition": "with" },
+    { "verb": "confide", "preposition": "in" },
+    { "verb": "confront", "preposition": "with", "separable": true },
+    { "verb": "confuse", "preposition": "with", "separable": true },
+    { "verb": "congratulate", "preposition": "on", "separable": true },
+    { "verb": "connive", "preposition": "at" },
+    { "verb": "consign", "preposition": "to", "separable": true },
+    { "verb": "consist", "preposition": "of/in" },
+    { "verb": "conspire", "preposition": "against/with" },
+    { "verb": "contrast", "preposition": "with", "separable": true },
+    { "verb": "contribute", "preposition": "to" },
+    { "verb": "converge", "preposition": "on" },
+    { "verb": "converse", "preposition": "with" },
+    { "verb": "convict", "preposition": "of", "separable": true },
+    { "verb": "coordinate", "preposition": "with", "separable": true },
+    { "verb": "cope", "preposition": "with" },
+    { "verb": "correspond", "preposition": "with/to" },
+    { "verb": "cower", "preposition": "from" },
+    { "verb": "crave", "preposition": "for" },
+    { "verb": "cull", "preposition": "from", "separable": true },
+    { "verb": "dabble", "preposition": "in" },
+    { "verb": "deal", "preposition": "with" },
+    { "verb": "decide", "preposition": "on/about" },
+    { "verb": "dedicate", "preposition": "to", "separable": true },
+    { "verb": "defer", "preposition": "to" },
+    { "verb": "deliberate", "preposition": "on/about" },
+    { "verb": "depend", "preposition": "on/upon" },
+    { "verb": "depict", "preposition": "as", "separable": true },
+    { "verb": "deprive", "preposition": "of", "separable": true },
+    { "verb": "derive", "preposition": "from" },
+    { "verb": "desist", "preposition": "from" },
+    { "verb": "detach", "preposition": "from", "separable": true },
+    { "verb": "deter", "preposition": "from", "separable": true },
+    { "verb": "detract", "preposition": "from" },
+    { "verb": "deviate", "preposition": "from" },
+    { "verb": "differ", "preposition": "with/from" },
+    { "verb": "disagree", "preposition": "with/about" },
+    { "verb": "disapprove", "preposition": "of" },
+    { "verb": "discriminate", "preposition": "against" },
+    { "verb": "distinguish", "preposition": "between" },
+    { "verb": "diverge", "preposition": "from" },
+    { "verb": "divest", "preposition": "of", "separable": true },
+    { "verb": "dream", "preposition": "about/of" },
+    { "verb": "drink", "preposition": "to" },
+    { "verb": "emerge", "preposition": "from" },
+    { "verb": "emphasize", "preposition": "with" },
+    { "verb": "enamor", "preposition": "with", "separable": true },
+    { "verb": "encounter", "preposition": "with" },
+    { "verb": "engage", "preposition": "in" },
+    { "verb": "enlist", "preposition": "in", "separable": true },
+    { "verb": "entrust", "preposition": "with", "separable": true },
+    { "verb": "escape", "preposition": "from" },
+    { "verb": "exchange", "preposition": "for", "separable": true },
+    { "verb": "exclude", "preposition": "from", "separable": true },
+    { "verb": "excuse", "preposition": "for", "separable": true },
+    { "verb": "exempt", "preposition": "from", "separable": true },
+    { "verb": "expel", "preposition": "from", "separable": true },
+    { "verb": "experiment", "preposition": "on/with" },
+    { "verb": "explain", "preposition": "to", "separable": true },
+    { "verb": "extricate", "preposition": "from", "separable": true },
+    { "verb": "falter", "preposition": "in" },
+    { "verb": "familiarize", "preposition": "with", "separable": true },
+    { "verb": "feel", "preposition": "about/like" },
+    { "verb": "flee", "preposition": "from" },
+    { "verb": "focus", "preposition": "on" },
+    { "verb": "forget", "preposition": "about" },
+    { "verb": "forgive", "preposition": "for", "separable": true },
+    { "verb": "free", "preposition": "from", "separable": true },
+    { "verb": "frown", "preposition": "on" },
+    { "verb": "glance", "preposition": "at" },
+    { "verb": "gloat", "preposition": "over" },
+    { "verb": "gossip", "preposition": "about" },
+    { "verb": "graduate", "preposition": "from" },
+    { "verb": "grapple", "preposition": "with" },
+    { "verb": "grieve", "preposition": "for" },
+    { "verb": "grumble", "preposition": "about" },
+    { "verb": "happen", "preposition": "to" },
+    { "verb": "hear", "preposition": "about/from/of" },
+    { "verb": "hesitate", "preposition": "about" },
+    { "verb": "hinder", "preposition": "from", "separable": true },
+    { "verb": "hinge", "preposition": "on" },
+    { "verb": "hope", "preposition": "for" },
+    { "verb": "identify", "preposition": "with", "separable": true },
+    { "verb": "import", "preposition": "from", "separable": true },
+    { "verb": "impose", "preposition": "on", "separable": true },
+    { "verb": "incite", "preposition": "to", "separable": true },
+    { "verb": "include", "preposition": "in", "separable": true },
+    { "verb": "infer", "preposition": "from", "separable": true },
+    { "verb": "inform", "preposition": "about/of", "separable": true },
+    { "verb": "infuse", "preposition": "with", "separable": true },
+    { "verb": "inquire", "preposition": "about/into" },
+    { "verb": "insist", "preposition": "on" },
+    { "verb": "insulate", "preposition": "from", "separable": true },
+    { "verb": "interfere", "preposition": "with/in" },
+    { "verb": "intervene", "preposition": "in" },
+    { "verb": "introduce", "preposition": "to", "separable": true },
+    { "verb": "invest", "preposition": "in" },
+    { "verb": "invite", "preposition": "to", "separable": true },
+    { "verb": "involve", "preposition": "in", "separable": true },
+    { "verb": "isolate", "preposition": "from", "separable": true },
+    { "verb": "jeer", "preposition": "at" },
+    { "verb": "joke", "preposition": "about/with" },
+    { "verb": "know", "preposition": "about" },
+    { "verb": "laugh", "preposition": "at/about" },
+    { "verb": "lecture", "preposition": "on" },
+    { "verb": "listen", "preposition": "to" },
+    { "verb": "long", "preposition": "for" },
+    { "verb": "look", "preposition": "at/for" },
+    { "verb": "marvel", "preposition": "at" },
+    { "verb": "mix", "preposition": "with", "separable": true },
+    { "verb": "mourn", "preposition": "for" },
+    { "verb": "object", "preposition": "to" },
+    { "verb": "obsess", "preposition": "about/over" },
+    { "verb": "operate", "preposition": "on" },
+    { "verb": "participate", "preposition": "in" },
+    { "verb": "persist", "preposition": "in" },
+    { "verb": "plan", "preposition": "on" },
+    { "verb": "ponder", "preposition": "on/over" },
+    { "verb": "pray", "preposition": "for" },
+    { "verb": "prefer", "preposition": "to", "separable": true },
+    { "verb": "prepare", "preposition": "for", "separable": true },
+    { "verb": "prevent", "preposition": "from", "separable": true },
+    { "verb": "prohibit", "preposition": "from", "separable": true },
+    { "verb": "protect", "preposition": "from", "separable": true },
+    { "verb": "provide", "preposition": "with", "separable": true },
+    { "verb": "punish", "preposition": "for", "separable": true },
+    { "verb": "quarrel", "preposition": "with/about" },
+    { "verb": "react", "preposition": "to" },
+    { "verb": "recover", "preposition": "from" },
+    { "verb": "refer", "preposition": "to" },
+    { "verb": "relate", "preposition": "to", "separable": true },
+    { "verb": "rely", "preposition": "on/upon" },
+    { "verb": "reminisce", "preposition": "about" },
+    { "verb": "rescue", "preposition": "from", "separable": true },
+    { "verb": "respond", "preposition": "to" },
+    { "verb": "retire", "preposition": "from" },
+    { "verb": "save", "preposition": "from", "separable": true },
+    { "verb": "scoff", "preposition": "at" },
+    { "verb": "search", "preposition": "for" },
+    { "verb": "separate", "preposition": "from", "separable": true },
+    { "verb": "shout", "preposition": "at" },
+    { "verb": "smile", "preposition": "at" },
+    { "verb": "speak", "preposition": "with/to/about" },
+    { "verb": "specialize", "preposition": "in" },
+    { "verb": "stare", "preposition": "at" },
+    { "verb": "stem", "preposition": "from" },
+    { "verb": "stop", "preposition": "from", "separable": true },
+    { "verb": "subscribe", "preposition": "to" },
+    { "verb": "substitute", "preposition": "for", "separable": true },
+    { "verb": "subtract", "preposition": "from", "separable": true },
+    { "verb": "succeed", "preposition": "in" },
+    { "verb": "suffer", "preposition": "from" },
+    { "verb": "talk", "preposition": "with/to/about" },
+    { "verb": "tell", "preposition": "about", "separable": true },
+    { "verb": "thank", "preposition": "for", "separable": true },
+    { "verb": "think", "preposition": "about/of" },
+    { "verb": "translate", "preposition": "into", "separable": true },
+    { "verb": "trust", "preposition": "with", "separable": true },
+    { "verb": "vouch", "preposition": "for" },
+    { "verb": "wait", "preposition": "for" },
+    { "verb": "warn", "preposition": "about/of/against", "separable": true },
+    { "verb": "wonder", "preposition": "about" },
+    { "verb": "work", "preposition": "with/for" },
+    { "verb": "worry", "preposition": "about" }
+];
+
+// Dicionário de traduções comuns para gerar exemplos melhores
+const prepositionalTranslations = {
+    "account for": "explicar, dar conta de",
+    "allude to": "aludir a, fazer referência a",
+    "approve of": "aprovar",
+    "aspire to": "aspirar a",
+    "atone for": "expiar, reparar",
+    "apologize for/to": "pedir desculpas por/para",
+    "apply for/to": "candidatar-se a/aplicar a",
+    "argue about/for/against/with/over": "discutir sobre/por/contra/com/sobre",
+    "arrange for": "arranjar, organizar",
+    "ascend toward": "subir em direção a",
+    "assign to": "atribuir a, designar para",
+    "assist with": "ajudar com",
+    "attach to": "anexar a, prender a",
+    "attempt to": "tentar",
+    "attest to": "atestar, comprovar",
+    "attract to/by": "atrair para/por",
+    "augment with": "aumentar com",
+    "awaken from": "despertar de",
+    "balk at": "recusar-se a, hesitar em",
+    "ban from": "banir de, proibir de",
+    "banish from": "banir de, exilar de",
+    "banter with/about": "brincar com/sobre",
+    "bar from": "proibir de, excluir de",
+    "bark at": "latir para",
+    "bask in": "deleitar-se em, desfrutar de",
+    "beg for": "implorar por, pedir por",
+    "bicker with": "brigar com, discutir com",
+    "bid for": "licitar por, fazer oferta por",
+    "bilk out of": "enganar, defraudar",
+    "bite into": "morder em",
+    "blame for/on/upon": "culpar por",
+    "block from": "bloquear de, impedir de",
+    "blossom into": "florescer em, desenvolver-se em",
+    "blot out": "apagar, obliterar",
+    "bore into": "perfurar em",
+    "brace for": "preparar-se para",
+    "brood about": "remoer sobre, pensar obsessivamente sobre",
+    "burden with": "sobrecarregar com",
+    "burrow into/under": "escavar em/sob",
+    "cavort with": "brincar com, divertir-se com",
+    "coerce into": "coagir a, forçar a",
+    "coincide with": "coincidir com",
+    "collaborate with": "colaborar com",
+    "collide with": "colidir com",
+    "comment about": "comentar sobre",
+    "compare with/to": "comparar com/a",
+    "compete with/against": "competir com/contra",
+    "complain about/of": "reclamar de",
+    "complement with": "complementar com",
+    "comply with": "cumprir com, obedecer a",
+    "conceal from": "esconder de, ocultar de",
+    "concentrate on": "concentrar-se em",
+    "concur with": "concordar com",
+    "confide in": "confiar em",
+    "confront with": "confrontar com",
+    "confuse with": "confundir com",
+    "congratulate on": "parabenizar por",
+    "connive at": "conspirar, conluiar",
+    "consign to": "consignar a, entregar a",
+    "consist of/in": "consistir de/em",
+    "conspire against/with": "conspirar contra/com",
+    "contrast with": "contrastar com",
+    "contribute to": "contribuir para",
+    "converge on": "convergir para",
+    "converse with": "conversar com",
+    "convict of": "condenar por",
+    "coordinate with": "coordenar com",
+    "cope with": "lidar com",
+    "correspond with/to": "corresponder com/a",
+    "cower from": "encolher-se de, recuar de",
+    "crave for": "ansear por, desejar muito",
+    "cull from": "selecionar de, escolher de",
+    "dabble in": "experimentar em, brincar com",
+    "deal with": "lidar com",
+    "decide on/about": "decidir sobre",
+    "dedicate to": "dedicar a",
+    "defer to": "deferir a, submeter-se a",
+    "deliberate on/about": "deliberar sobre",
+    "depend on/upon": "depender de",
+    "depict as": "retratar como",
+    "deprive of": "privar de",
+    "derive from": "derivar de",
+    "desist from": "desistir de",
+    "detach from": "desprender de, separar de",
+    "deter from": "dissuadir de",
+    "detract from": "diminuir, prejudicar",
+    "deviate from": "desviar de",
+    "differ with/from": "diferir de, discordar de",
+    "disagree with/about": "discordar de/sobre",
+    "disapprove of": "desaprovar",
+    "discriminate against": "discriminar contra",
+    "distinguish between": "distinguir entre",
+    "diverge from": "divergir de",
+    "divest of": "despojar de",
+    "dream about/of": "sonhar com",
+    "drink to": "beber para, brindar a",
+    "emerge from": "emergir de",
+    "emphasize with": "enfatizar com",
+    "enamor with": "apaixonar-se por",
+    "encounter with": "encontrar com",
+    "engage in": "envolver-se em",
+    "enlist in": "alistar-se em",
+    "entrust with": "confiar a",
+    "escape from": "escapar de",
+    "exchange for": "trocar por",
+    "exclude from": "excluir de",
+    "excuse for": "desculpar por",
+    "exempt from": "isentar de",
+    "expel from": "expulsar de",
+    "experiment on/with": "experimentar em/com",
+    "explain to": "explicar para",
+    "extricate from": "extrair de, livrar-se de",
+    "falter in": "vacilar em",
+    "familiarize with": "familiarizar-se com",
+    "feel about/like": "sentir sobre/como",
+    "flee from": "fugir de",
+    "focus on": "focar em",
+    "forget about": "esquecer de",
+    "forgive for": "perdoar por",
+    "free from": "libertar de",
+    "frown on": "desaprovar, reprovar",
+    "glance at": "olhar rapidamente para",
+    "gloat over": "regozijar-se com",
+    "gossip about": "fofocar sobre",
+    "graduate from": "formar-se em",
+    "grapple with": "lutar com, lidar com",
+    "grieve for": "lamentar por, sofrer por",
+    "grumble about": "resmungar sobre",
+    "happen to": "acontecer com",
+    "hear about/from/of": "ouvir sobre/de",
+    "hesitate about": "hesitar sobre",
+    "hinder from": "impedir de",
+    "hinge on": "depender de",
+    "hope for": "esperar por",
+    "identify with": "identificar-se com",
+    "import from": "importar de",
+    "impose on": "impor a",
+    "incite to": "incitar a",
+    "include in": "incluir em",
+    "infer from": "inferir de",
+    "inform about/of": "informar sobre/de",
+    "infuse with": "infundir com",
+    "inquire about/into": "perguntar sobre/investigar",
+    "insist on": "insistir em",
+    "insulate from": "isolar de",
+    "interfere with/in": "interferir com/em",
+    "intervene in": "intervir em",
+    "introduce to": "apresentar a",
+    "invest in": "investir em",
+    "invite to": "convidar para",
+    "involve in": "envolver em",
+    "isolate from": "isolar de",
+    "jeer at": "zombar de",
+    "joke about/with": "brincar sobre/com",
+    "know about": "saber sobre",
+    "laugh at/about": "rir de/sobre",
+    "lecture on": "dar palestra sobre",
+    "listen to": "ouvir",
+    "long for": "ansiar por",
+    "look at/for": "olhar para/procurar",
+    "marvel at": "maravilhar-se com",
+    "mix with": "misturar com",
+    "mourn for": "lamentar por",
+    "object to": "opor-se a",
+    "obsess about/over": "obcecar-se com",
+    "operate on": "operar em",
+    "participate in": "participar de",
+    "persist in": "persistir em",
+    "plan on": "planejar",
+    "ponder on/over": "ponderar sobre",
+    "pray for": "rezar por",
+    "prefer to": "preferir a",
+    "prepare for": "preparar-se para",
+    "prevent from": "prevenir de, impedir de",
+    "prohibit from": "proibir de",
+    "protect from": "proteger de",
+    "provide with": "fornecer com",
+    "punish for": "punir por",
+    "quarrel with/about": "brigar com/sobre",
+    "react to": "reagir a",
+    "recover from": "recuperar-se de",
+    "refer to": "referir-se a",
+    "relate to": "relacionar-se com",
+    "rely on/upon": "confiar em",
+    "reminisce about": "recordar, rememorar",
+    "rescue from": "resgatar de",
+    "respond to": "responder a",
+    "retire from": "aposentar-se de",
+    "save from": "salvar de",
+    "scoff at": "zombar de",
+    "search for": "procurar por",
+    "separate from": "separar de",
+    "shout at": "gritar para",
+    "smile at": "sorrir para",
+    "speak with/to/about": "falar com/para/sobre",
+    "specialize in": "especializar-se em",
+    "stare at": "olhar fixamente para",
+    "stem from": "originar-se de",
+    "stop from": "impedir de",
+    "subscribe to": "assinar, subscrever",
+    "substitute for": "substituir por",
+    "subtract from": "subtrair de",
+    "succeed in": "ter sucesso em",
+    "suffer from": "sofrer de",
+    "talk with/to/about": "conversar com/para/sobre",
+    "tell about": "contar sobre",
+    "thank for": "agradecer por",
+    "think about/of": "pensar sobre/de",
+    "translate into": "traduzir para",
+    "trust with": "confiar a",
+    "vouch for": "garantir por",
+    "wait for": "esperar por",
+    "warn about/of/against": "avisar sobre/de/contra",
+    "wonder about": "perguntar-se sobre",
+    "work with/for": "trabalhar com/para",
+    "worry about": "preocupar-se com"
+};
+
+// Processar Prepositional Verbs e adicionar traduções e exemplos
+let prepositionalVerbs = prepositionalVerbsRaw.map(item => {
+    const firstPreposition = item.preposition.split('/')[0].trim();
+    const verbPhrase = `${item.verb} ${firstPreposition}`;
+    const traducao = prepositionalTranslations[verbPhrase] || prepositionalTranslations[`${item.verb} ${item.preposition}`] || `Usar "${item.verb}" com "${firstPreposition}"`;
+    
+    // Gerar exemplos
+    const exemplo_pt = `Exemplo: "Eles precisam ${item.verb} ${firstPreposition} algo"`;
+    const exemplo_en = `Example: "They need to ${item.verb} ${firstPreposition} something"`;
+    
+    return {
+        verb: item.verb,
+        preposition: item.preposition,
+        separable: item.separable || false,
+        traducao: traducao,
+        exemplo_pt: exemplo_pt,
+        exemplo_en: exemplo_en
+    };
+});
+
 let currentMode = null;
 let currentIndex = 0;
 let shuffledVerbs = [];
 let results = {
+    correct: 0,
+    wrong: 0,
+    errors: []
+};
+
+// Variáveis para Prepositional Verbs
+let currentPrepositionalMode = null;
+let currentPrepositionalIndex = 0;
+let shuffledPrepositionalVerbs = [];
+let prepositionalResults = {
     correct: 0,
     wrong: 0,
     errors: []
@@ -878,6 +1348,179 @@ function saveVerbConfig() {
     
     // Mostrar mensagem de sucesso
     alert(`Configuração salva! ${activeVerbs.size} verbo${activeVerbs.size !== 1 ? 's' : ''} ativo${activeVerbs.size !== 1 ? 's' : ''}.`);
+}
+
+// ========== PREPOSITIONAL VERBS ==========
+
+// Gerenciamento de Prepositional Verbs ativos/inativos
+let activePrepositionalVerbs = new Set();
+
+// Carregar Prepositional Verbs ativos do localStorage
+function loadActivePrepositionalVerbs() {
+    const saved = localStorage.getItem('activePrepositionalVerbs');
+    if (saved) {
+        try {
+            const indices = JSON.parse(saved);
+            activePrepositionalVerbs = new Set(indices);
+        } catch (e) {
+            activePrepositionalVerbs = new Set(prepositionalVerbs.map((_, index) => index));
+        }
+    } else {
+        activePrepositionalVerbs = new Set(prepositionalVerbs.map((_, index) => index));
+    }
+}
+
+// Salvar Prepositional Verbs ativos no localStorage
+function saveActivePrepositionalVerbs() {
+    localStorage.setItem('activePrepositionalVerbs', JSON.stringify(Array.from(activePrepositionalVerbs)));
+}
+
+// Obter apenas os Prepositional Verbs ativos
+function getActivePrepositionalVerbs() {
+    return prepositionalVerbs.filter((_, index) => activePrepositionalVerbs.has(index));
+}
+
+// Abrir tela de configuração de Prepositional Verbs
+function openPrepositionalVerbConfig() {
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode1').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode2').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode3').classList.remove('active');
+    document.getElementById('results').classList.remove('active');
+    document.getElementById('prepositional-verb-config').classList.add('active');
+    
+    renderPrepositionalVerbsTable();
+    updatePrepositionalVerbCount();
+}
+
+// Fechar tela de configuração de Prepositional Verbs
+function closePrepositionalVerbConfig() {
+    document.getElementById('prepositional-verb-config').classList.remove('active');
+    document.getElementById('menu').classList.add('active');
+}
+
+// Renderizar tabela de Prepositional Verbs
+function renderPrepositionalVerbsTable() {
+    const tbody = document.getElementById('prepositional-verbs-table-body');
+    tbody.innerHTML = '';
+    
+    prepositionalVerbs.forEach((verb, index) => {
+        const row = document.createElement('tr');
+        const isActive = activePrepositionalVerbs.has(index);
+        
+        row.innerHTML = `
+            <td class="checkbox-col">
+                <input type="checkbox" 
+                       data-verb-index="${index}" 
+                       ${isActive ? 'checked' : ''}
+                       onchange="togglePrepositionalVerb(${index}, this.checked)">
+            </td>
+            <td>${verb.verb}</td>
+            <td>${verb.preposition}</td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+    
+    // Atualizar checkbox "marcar todos"
+    const allChecked = prepositionalVerbs.every((_, index) => activePrepositionalVerbs.has(index));
+    document.getElementById('select-all-prepositional-checkbox').checked = allChecked;
+}
+
+// Alternar Prepositional Verb individual
+function togglePrepositionalVerb(index, isActive) {
+    if (isActive) {
+        activePrepositionalVerbs.add(index);
+    } else {
+        activePrepositionalVerbs.delete(index);
+    }
+    updatePrepositionalVerbCount();
+    
+    const allChecked = prepositionalVerbs.every((_, index) => activePrepositionalVerbs.has(index));
+    document.getElementById('select-all-prepositional-checkbox').checked = allChecked;
+}
+
+// Alternar todos os Prepositional Verbs
+function toggleAllPrepositionalVerbs(checked) {
+    if (checked) {
+        prepositionalVerbs.forEach((_, index) => activePrepositionalVerbs.add(index));
+    } else {
+        activePrepositionalVerbs.clear();
+    }
+    renderPrepositionalVerbsTable();
+    updatePrepositionalVerbCount();
+}
+
+// Marcar todos os Prepositional Verbs
+function selectAllPrepositionalVerbs() {
+    prepositionalVerbs.forEach((_, index) => activePrepositionalVerbs.add(index));
+    renderPrepositionalVerbsTable();
+    updatePrepositionalVerbCount();
+}
+
+// Desmarcar todos os Prepositional Verbs
+function deselectAllPrepositionalVerbs() {
+    activePrepositionalVerbs.clear();
+    renderPrepositionalVerbsTable();
+    updatePrepositionalVerbCount();
+}
+
+// Atualizar contador de Prepositional Verbs ativos
+function updatePrepositionalVerbCount() {
+    const count = activePrepositionalVerbs.size;
+    document.getElementById('prepositional-verb-count').textContent = `${count} verbo${count !== 1 ? 's' : ''} ativo${count !== 1 ? 's' : ''}`;
+}
+
+// Salvar configuração de Prepositional Verbs e voltar
+function savePrepositionalVerbConfig() {
+    saveActivePrepositionalVerbs();
+    closePrepositionalVerbConfig();
+    
+    alert(`Configuração salva! ${activePrepositionalVerbs.size} verbo${activePrepositionalVerbs.size !== 1 ? 's' : ''} ativo${activePrepositionalVerbs.size !== 1 ? 's' : ''}.`);
+}
+
+// Iniciar quiz de Prepositional Verbs
+function startPrepositionalQuiz(mode) {
+    currentPrepositionalMode = mode;
+    currentPrepositionalIndex = 0;
+    prepositionalResults = {
+        correct: 0,
+        wrong: 0,
+        errors: []
+    };
+    
+    // Esconder menu e mostrar quiz apropriado
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode1').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode2').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode3').classList.remove('active');
+    document.getElementById('results').classList.remove('active');
+    
+    if (mode === 1) {
+        const activeList = getActivePrepositionalVerbs();
+        if (activeList.length === 0) {
+            alert('Por favor, ative pelo menos um verbo na configuração antes de iniciar o quiz.');
+            openPrepositionalVerbConfig();
+            return;
+        }
+        shuffledPrepositionalVerbs = shuffleArray([...activeList]);
+        document.getElementById('prepositional-quiz-mode1').classList.add('active');
+        loadPrepositionalQuestionMode1();
+    } else if (mode === 2) {
+        const activeList = getActivePrepositionalVerbs();
+        if (activeList.length === 0) {
+            alert('Por favor, ative pelo menos um verbo na configuração antes de iniciar o quiz.');
+            openPrepositionalVerbConfig();
+            return;
+        }
+        shuffledPrepositionalVerbs = shuffleArray([...activeList]);
+        document.getElementById('prepositional-quiz-mode2').classList.add('active');
+        loadPrepositionalQuestionMode2();
+    } else if (mode === 3) {
+        // Modo 3: Flashcards - usa TODOS os verbos
+        document.getElementById('prepositional-quiz-mode3').classList.add('active');
+        initializePrepositionalFlashcards();
+    }
 }
 
 // Função para normalizar respostas (remover espaços, converter para minúsculas, lidar com alternativas)
@@ -1334,6 +1977,10 @@ function goToMenu() {
     document.getElementById('quiz-mode2').classList.remove('active');
     document.getElementById('quiz-mode3').classList.remove('active');
     document.getElementById('verb-config').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode1').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode2').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode3').classList.remove('active');
+    document.getElementById('prepositional-verb-config').classList.remove('active');
     document.getElementById('menu').classList.add('active');
 }
 
@@ -1598,6 +2245,423 @@ function showFlashcardResults() {
     document.getElementById('errors-section').style.display = 'none';
 }
 
+// ========== PREPOSITIONAL VERBS - MODOS DE QUIZ ==========
+
+// Carregar pergunta Modo 1 (Digitação) - Prepositional Verbs
+function loadPrepositionalQuestionMode1() {
+    if (currentPrepositionalIndex >= shuffledPrepositionalVerbs.length) {
+        showPrepositionalResults();
+        return;
+    }
+    
+    const verb = shuffledPrepositionalVerbs[currentPrepositionalIndex];
+    document.getElementById('prepositional-translation1').textContent = verb.traducao;
+    document.getElementById('prepositional-example1').textContent = verb.exemplo_pt;
+    
+    // Limpar input
+    document.getElementById('prepositional-input').value = '';
+    document.getElementById('prepositional-input').classList.remove('correct', 'incorrect');
+    
+    // Atualizar contador e progresso
+    document.getElementById('prepositional-counter1').textContent = `${currentPrepositionalIndex + 1} / ${shuffledPrepositionalVerbs.length}`;
+    const progress = ((currentPrepositionalIndex + 1) / shuffledPrepositionalVerbs.length) * 100;
+    document.getElementById('prepositional-progress1').style.width = progress + '%';
+    
+    document.getElementById('prepositional-input').focus();
+}
+
+// Processar resposta Modo 1 - Prepositional Verbs
+document.getElementById('form-prepositional-mode1').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const verb = shuffledPrepositionalVerbs[currentPrepositionalIndex];
+    const userAnswer = document.getElementById('prepositional-input').value;
+    const correctAnswer = `${verb.verb} ${verb.preposition.split('/')[0].trim()}`;
+    
+    const isCorrect = checkAnswer(userAnswer, correctAnswer) || 
+                     checkAnswer(userAnswer, `${verb.verb} ${verb.preposition}`);
+    
+    if (isCorrect) {
+        document.getElementById('prepositional-input').classList.add('correct');
+        document.getElementById('prepositional-input').classList.remove('incorrect');
+        prepositionalResults.correct++;
+    } else {
+        document.getElementById('prepositional-input').classList.add('incorrect');
+        document.getElementById('prepositional-input').classList.remove('correct');
+        prepositionalResults.wrong++;
+        prepositionalResults.errors.push({
+            verb: verb.verb,
+            preposition: verb.preposition,
+            userAnswer: userAnswer,
+            correctAnswer: correctAnswer
+        });
+    }
+    
+    setTimeout(() => {
+        currentPrepositionalIndex++;
+        loadPrepositionalQuestionMode1();
+    }, 1500);
+});
+
+// Carregar pergunta Modo 2 (Múltipla Escolha) - Prepositional Verbs
+function loadPrepositionalQuestionMode2() {
+    if (currentPrepositionalIndex >= shuffledPrepositionalVerbs.length) {
+        showPrepositionalResults();
+        return;
+    }
+    
+    const verb = shuffledPrepositionalVerbs[currentPrepositionalIndex];
+    document.getElementById('prepositional-translation2').textContent = verb.traducao;
+    document.getElementById('prepositional-example2').textContent = verb.exemplo_pt;
+    document.getElementById('prepositional-verb2').textContent = verb.verb;
+    
+    // Criar opções com preposições enganosas
+    const correctPreposition = verb.preposition.split('/')[0].trim();
+    const allPrepositions = ['about', 'at', 'by', 'for', 'from', 'in', 'into', 'of', 'on', 'to', 'with', 'against', 'over', 'upon', 'out of', 'up', 'down', 'away', 'back'];
+    const options = new Set([correctPreposition]);
+    
+    // Adicionar preposições aleatórias
+    while (options.size < 4) {
+        const randomPreposition = allPrepositions[Math.floor(Math.random() * allPrepositions.length)];
+        if (normalizeAnswer(randomPreposition) !== normalizeAnswer(correctPreposition)) {
+            options.add(randomPreposition);
+        }
+    }
+    
+    const shuffledOptions = shuffleArray(Array.from(options));
+    
+    // Renderizar opções
+    const container = document.getElementById('prepositional-options-container');
+    container.innerHTML = '';
+    shuffledOptions.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = option;
+        btn.onclick = () => selectPrepositionalOption(btn, option, verb);
+        container.appendChild(btn);
+    });
+    
+    // Atualizar contador e progresso
+    document.getElementById('prepositional-counter2').textContent = `${currentPrepositionalIndex + 1} / ${shuffledPrepositionalVerbs.length}`;
+    const progress = ((currentPrepositionalIndex + 1) / shuffledPrepositionalVerbs.length) * 100;
+    document.getElementById('prepositional-progress2').style.width = progress + '%';
+}
+
+// Selecionar opção no Modo 2 - Prepositional Verbs
+function selectPrepositionalOption(button, selectedPreposition, verb) {
+    const buttons = document.querySelectorAll('#prepositional-options-container .option-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.onclick = null;
+    });
+    
+    const correctPreposition = verb.preposition.split('/')[0].trim();
+    const isCorrect = checkAnswer(selectedPreposition, correctPreposition) || 
+                     checkAnswer(selectedPreposition, verb.preposition);
+    
+    if (isCorrect) {
+        button.classList.add('correct');
+        prepositionalResults.correct++;
+    } else {
+        button.classList.add('incorrect');
+        prepositionalResults.wrong++;
+        
+        buttons.forEach(btn => {
+            if (checkAnswer(btn.textContent, correctPreposition) || 
+                checkAnswer(btn.textContent, verb.preposition)) {
+                btn.classList.add('correct');
+            }
+        });
+        
+        prepositionalResults.errors.push({
+            verb: verb.verb,
+            preposition: verb.preposition,
+            userAnswer: selectedPreposition,
+            correctAnswer: correctPreposition
+        });
+    }
+    
+    setTimeout(() => {
+        currentPrepositionalIndex++;
+        loadPrepositionalQuestionMode2();
+    }, 1500);
+}
+
+// Sistema de Flashcards para Prepositional Verbs
+let prepositionalFlashcardData = {};
+let prepositionalFlashcardQueue = [];
+let currentPrepositionalFlashcard = null;
+let prepositionalFlashcardIsFlipped = false;
+let prepositionalFailedCards = [];
+
+// Carregar dados dos flashcards de Prepositional Verbs
+function loadPrepositionalFlashcardData() {
+    const saved = localStorage.getItem('prepositionalFlashcardData');
+    if (saved) {
+        try {
+            prepositionalFlashcardData = JSON.parse(saved);
+            Object.keys(prepositionalFlashcardData).forEach(index => {
+                if (prepositionalFlashcardData[index].nextReview) {
+                    prepositionalFlashcardData[index].nextReview = new Date(prepositionalFlashcardData[index].nextReview);
+                }
+            });
+        } catch (e) {
+            prepositionalFlashcardData = {};
+        }
+    }
+}
+
+// Salvar dados dos flashcards de Prepositional Verbs
+function savePrepositionalFlashcardData() {
+    const dataToSave = {};
+    Object.keys(prepositionalFlashcardData).forEach(index => {
+        dataToSave[index] = { ...prepositionalFlashcardData[index] };
+        if (dataToSave[index].nextReview instanceof Date) {
+            dataToSave[index].nextReview = dataToSave[index].nextReview.toISOString();
+        }
+    });
+    localStorage.setItem('prepositionalFlashcardData', JSON.stringify(dataToSave));
+}
+
+// Inicializar flashcards de Prepositional Verbs
+function initializePrepositionalFlashcards() {
+    loadPrepositionalFlashcardData();
+    prepositionalFlashcardIsFlipped = false;
+    prepositionalFailedCards = [];
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const newCards = [];
+    const reviewCards = [];
+    
+    prepositionalVerbs.forEach((verb, index) => {
+        const data = prepositionalFlashcardData[index] || {};
+        const nextReview = data.nextReview ? new Date(data.nextReview) : null;
+        
+        if (!nextReview || nextReview <= today) {
+            if (!nextReview) {
+                newCards.push({ verb, index });
+            } else {
+                reviewCards.push({ verb, index });
+            }
+        }
+    });
+    
+    prepositionalFlashcardQueue = [
+        ...shuffleArray(newCards),
+        ...shuffleArray(reviewCards)
+    ];
+    
+    updatePrepositionalFlashcardStats();
+    
+    if (prepositionalFlashcardQueue.length === 0) {
+        alert('Parabéns! Não há cartões para revisar hoje.');
+        goToMenu();
+        return;
+    }
+    
+    loadNextPrepositionalFlashcard();
+}
+
+// Carregar próximo flashcard de Prepositional Verbs
+function loadNextPrepositionalFlashcard() {
+    if (prepositionalFlashcardQueue.length === 0 && prepositionalFailedCards.length === 0) {
+        showPrepositionalFlashcardResults();
+        return;
+    }
+    
+    if (prepositionalFlashcardQueue.length === 0 && prepositionalFailedCards.length > 0) {
+        prepositionalFlashcardQueue = [...prepositionalFailedCards];
+        prepositionalFailedCards = [];
+    }
+    
+    const card = document.getElementById('prepositional-flashcard');
+    const wasFlipped = card.classList.contains('flipped');
+    
+    if (wasFlipped) {
+        card.classList.remove('flipped');
+        prepositionalFlashcardIsFlipped = false;
+        setTimeout(() => {
+            updatePrepositionalFlashcardContent();
+        }, 600);
+    } else {
+        updatePrepositionalFlashcardContent();
+    }
+}
+
+// Atualizar conteúdo do flashcard de Prepositional Verbs
+function updatePrepositionalFlashcardContent() {
+    currentPrepositionalFlashcard = prepositionalFlashcardQueue.shift();
+    prepositionalFlashcardIsFlipped = false;
+    
+    const verb = currentPrepositionalFlashcard.verb;
+    const answer = `${verb.verb} ${verb.preposition.split('/')[0].trim()}`;
+    
+    document.getElementById('prepositional-flashcard-translation').textContent = verb.traducao;
+    document.getElementById('prepositional-flashcard-example-pt').textContent = verb.exemplo_pt;
+    document.getElementById('prepositional-flashcard-answer').textContent = answer;
+    document.getElementById('prepositional-flashcard-example-en').textContent = verb.exemplo_en;
+    
+    document.querySelectorAll('#prepositional-flashcard-actions .action-btn').forEach(btn => btn.disabled = false);
+    
+    const remaining = prepositionalFlashcardQueue.length + prepositionalFailedCards.length;
+    const total = prepositionalVerbs.length;
+    document.getElementById('prepositional-flashcard-counter').textContent = `${total - remaining} / ${total}`;
+}
+
+// Virar cartão de Prepositional Verbs
+function flipPrepositionalCard() {
+    if (prepositionalFlashcardIsFlipped) return;
+    const card = document.getElementById('prepositional-flashcard');
+    card.classList.add('flipped');
+    prepositionalFlashcardIsFlipped = true;
+}
+
+// Avaliar cartão de Prepositional Verbs
+function ratePrepositionalCard(rating) {
+    if (!currentPrepositionalFlashcard) return;
+    
+    if (!prepositionalFlashcardIsFlipped) {
+        flipPrepositionalCard();
+        setTimeout(() => ratePrepositionalCard(rating), 600);
+        return;
+    }
+    
+    const index = currentPrepositionalFlashcard.index;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let data = prepositionalFlashcardData[index] || {
+        interval: 0,
+        easeFactor: 2.5,
+        reviewCount: 0
+    };
+    
+    if (rating === 'again') {
+        prepositionalFailedCards.push(currentPrepositionalFlashcard);
+        data.interval = 0;
+        data.easeFactor = Math.max(1.3, data.easeFactor - 0.2);
+    } else {
+        if (rating === 'easy') {
+            data.interval = Math.max(data.interval * 2.5, 4);
+            data.easeFactor = Math.min(2.5, data.easeFactor + 0.15);
+        } else if (rating === 'good') {
+            if (data.interval === 0) {
+                data.interval = 1;
+            } else {
+                data.interval = Math.floor(data.interval * data.easeFactor);
+            }
+        } else if (rating === 'hard') {
+            if (data.interval === 0) {
+                data.interval = 0.5;
+            } else {
+                data.interval = Math.max(1, Math.floor(data.interval * 1.2));
+            }
+            data.easeFactor = Math.max(1.3, data.easeFactor - 0.15);
+        }
+        
+        data.reviewCount = (data.reviewCount || 0) + 1;
+        const nextReview = new Date(today);
+        nextReview.setDate(nextReview.getDate() + Math.ceil(data.interval));
+        data.nextReview = nextReview;
+    }
+    
+    prepositionalFlashcardData[index] = data;
+    savePrepositionalFlashcardData();
+    
+    document.querySelectorAll('#prepositional-flashcard-actions .action-btn').forEach(btn => btn.disabled = true);
+    
+    setTimeout(() => {
+        loadNextPrepositionalFlashcard();
+    }, 500);
+}
+
+// Atualizar estatísticas dos flashcards de Prepositional Verbs
+function updatePrepositionalFlashcardStats() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let newCount = 0;
+    let reviewCount = 0;
+    
+    prepositionalVerbs.forEach((_, index) => {
+        const data = prepositionalFlashcardData[index] || {};
+        const nextReview = data.nextReview ? new Date(data.nextReview) : null;
+        
+        if (!nextReview) {
+            newCount++;
+        } else if (nextReview <= today) {
+            reviewCount++;
+        }
+    });
+    
+    document.getElementById('prepositional-flashcard-stats').textContent = 
+        `Novos: ${newCount} | Revisão: ${reviewCount}`;
+}
+
+// Mostrar resultados dos flashcards de Prepositional Verbs
+function showPrepositionalFlashcardResults() {
+    document.getElementById('prepositional-quiz-mode3').classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    
+    const totalReviewed = Object.keys(prepositionalFlashcardData).filter(index => {
+        const data = prepositionalFlashcardData[index];
+        return data && data.reviewCount > 0;
+    }).length;
+    
+    document.getElementById('correct-answers').textContent = totalReviewed;
+    document.getElementById('wrong-answers').textContent = 0;
+    document.getElementById('percentage').textContent = '100%';
+    document.getElementById('total-questions').textContent = totalReviewed;
+    document.getElementById('errors-section').style.display = 'none';
+}
+
+// Mostrar resultados dos quizzes de Prepositional Verbs
+function showPrepositionalResults() {
+    document.getElementById('prepositional-quiz-mode1').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode2').classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    
+    const total = prepositionalResults.correct + prepositionalResults.wrong;
+    const percentage = total > 0 ? Math.round((prepositionalResults.correct / total) * 100) : 0;
+    
+    document.getElementById('correct-answers').textContent = prepositionalResults.correct;
+    document.getElementById('wrong-answers').textContent = prepositionalResults.wrong;
+    document.getElementById('percentage').textContent = percentage + '%';
+    document.getElementById('total-questions').textContent = total;
+    
+    const errorsList = document.getElementById('errors-list');
+    const errorsSection = document.getElementById('errors-section');
+    
+    if (prepositionalResults.errors.length === 0) {
+        errorsSection.style.display = 'none';
+    } else {
+        errorsSection.style.display = 'block';
+        errorsList.innerHTML = '';
+        
+        prepositionalResults.errors.forEach(error => {
+            const errorItem = document.createElement('div');
+            errorItem.className = 'error-item';
+            errorItem.innerHTML = `
+                <h3>${error.verb} + ${error.preposition}</h3>
+                <div class="error-details">
+                    <div class="error-detail">
+                        <strong>Sua resposta:</strong> ${error.userAnswer}
+                    </div>
+                    <div class="error-detail">
+                        <strong>Resposta correta:</strong> ${error.correctAnswer}
+                    </div>
+                </div>
+            `;
+            errorsList.appendChild(errorItem);
+        });
+    }
+}
+
 // Inicializar sistema
 loadActiveVerbs();
 loadFlashcardData();
+// Prepositional Verbs já estão carregados na constante acima
+loadActivePrepositionalVerbs();
+loadPrepositionalFlashcardData();
