@@ -1186,9 +1186,9 @@ let prepositionalVerbs = prepositionalVerbsRaw.map(item => {
     const verbPhrase = `${item.verb} ${firstPreposition}`;
     const traducao = prepositionalTranslations[verbPhrase] || prepositionalTranslations[`${item.verb} ${item.preposition}`] || `Usar "${item.verb}" com "${firstPreposition}"`;
     
-    // Gerar exemplos
-    const exemplo_pt = `Exemplo: "Eles precisam ${item.verb} ${firstPreposition} algo"`;
-    const exemplo_en = `Example: "They need to ${item.verb} ${firstPreposition} something"`;
+    // Gerar exemplos SEM a preposição (o usuário deve digitar/escolher); usar _____ como espaço para a resposta
+    const exemplo_pt = `Exemplo: "Eles precisam ${item.verb} _____ algo"`;
+    const exemplo_en = `Example: "They need to ${item.verb} _____ something"`;
     
     return {
         verb: item.verb,
@@ -2005,7 +2005,9 @@ function loadFlashcardData() {
             // Converter strings de data de volta para objetos Date
             Object.keys(flashcardData).forEach(index => {
                 if (flashcardData[index].nextReview) {
-                    flashcardData[index].nextReview = new Date(flashcardData[index].nextReview);
+                    const d = new Date(flashcardData[index].nextReview);
+                    d.setHours(0, 0, 0, 0); // Normalizar para meia-noite (evita bug de timezone ao comparar dias)
+                    flashcardData[index].nextReview = d;
                 }
             });
         } catch (e) {
@@ -2184,9 +2186,10 @@ function rateCard(rating) {
         
         data.reviewCount = (data.reviewCount || 0) + 1;
         
-        // Calcular próxima data de revisão
+        // Calcular próxima data de revisão (sempre em meia-noite para comparação correta de dias)
         const nextReview = new Date(today);
         nextReview.setDate(nextReview.getDate() + Math.ceil(data.interval));
+        nextReview.setHours(0, 0, 0, 0);
         data.nextReview = nextReview;
     }
     
@@ -2402,7 +2405,9 @@ function loadPrepositionalFlashcardData() {
             prepositionalFlashcardData = JSON.parse(saved);
             Object.keys(prepositionalFlashcardData).forEach(index => {
                 if (prepositionalFlashcardData[index].nextReview) {
-                    prepositionalFlashcardData[index].nextReview = new Date(prepositionalFlashcardData[index].nextReview);
+                    const d = new Date(prepositionalFlashcardData[index].nextReview);
+                    d.setHours(0, 0, 0, 0); // Normalizar para meia-noite (evita bug de timezone ao comparar dias)
+                    prepositionalFlashcardData[index].nextReview = d;
                 }
             });
         } catch (e) {
@@ -2564,6 +2569,7 @@ function ratePrepositionalCard(rating) {
         data.reviewCount = (data.reviewCount || 0) + 1;
         const nextReview = new Date(today);
         nextReview.setDate(nextReview.getDate() + Math.ceil(data.interval));
+        nextReview.setHours(0, 0, 0, 0);
         data.nextReview = nextReview;
     }
     
