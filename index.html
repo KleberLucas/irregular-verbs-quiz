@@ -7,14 +7,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Botões de Configuração (fixos no topo) -->
-    <div class="config-buttons-top">
-        <button class="config-btn" onclick="openVerbConfig()" title="Configurar Verbos">
-            ⚙️ Configurar Verbos
+    <!-- Navegação fixa no topo (hambúrguer no mobile) -->
+    <div class="config-buttons-top" id="top-nav">
+        <button type="button" class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="nav-drawer">
+            <span class="nav-hamburger-lines" aria-hidden="true"></span>
         </button>
-        <button class="config-btn" onclick="openPrepositionalVerbConfig()" title="Configurar Prepositional Verbs">
-            ⚙️ Configurar Prepositional Verbs
-        </button>
+        <div class="nav-backdrop" id="nav-backdrop" aria-hidden="true"></div>
+        <nav class="nav-drawer" id="nav-drawer" aria-label="Menu do app">
+            <button type="button" class="config-btn nav-back-category" id="btn-back-category" onclick="goToCategoryStart()" title="Voltar à escolha de categoria" hidden>
+                🏠 Voltar ao Início
+            </button>
+            <button type="button" class="config-btn" onclick="openVerbConfig()" title="Configurar Verbos">
+                ⚙️ Configurar Verbos
+            </button>
+            <button type="button" class="config-btn" onclick="openPrepositionalVerbConfig()" title="Configurar Prepositional Verbs">
+                ⚙️ Configurar Prepositional Verbs
+            </button>
+        </nav>
     </div>
 
     <!-- Menu Principal -->

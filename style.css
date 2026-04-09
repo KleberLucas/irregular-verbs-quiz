@@ -480,15 +480,119 @@ body {
     background: var(--primary-dark);
 }
 
-/* Botões de Configuração */
+/* Navegação fixa no topo (config + voltar ao início) */
 .config-buttons-top {
     position: fixed;
     top: 20px;
     left: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.nav-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    margin-bottom: 0;
+    background: var(--card-bg);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-hamburger:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.nav-hamburger-lines {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    position: relative;
+}
+
+.nav-hamburger-lines::before,
+.nav-hamburger-lines::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+}
+
+.nav-hamburger-lines::before {
+    top: -7px;
+}
+
+.nav-hamburger-lines::after {
+    top: 7px;
+}
+
+.nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 999;
+}
+
+.nav-backdrop.visible {
+    display: block;
+}
+
+@media (min-width: 769px) {
+    .nav-hamburger {
+        display: none !important;
+    }
+
+    .nav-backdrop {
+        display: none !important;
+    }
+
+    .nav-drawer {
+        position: static;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        max-width: none;
+    }
+}
+
+.nav-drawer {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 1000;
+}
+
+.nav-drawer .config-btn {
+    width: 100%;
+    text-align: center;
+}
+
+.nav-back-category {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.nav-back-category:hover {
+    background: var(--secondary-color);
+    color: white;
 }
 
 .config-btn {
@@ -844,11 +948,39 @@ body {
         text-align: center;
     }
 
+    .config-buttons-top {
+        top: 12px;
+        left: 12px;
+    }
+
+    .nav-hamburger {
+        display: flex;
+        margin-bottom: 0;
+    }
+
+    .nav-drawer {
+        display: none;
+        position: fixed;
+        top: 68px;
+        left: 12px;
+        right: 12px;
+        max-width: 320px;
+        padding: 12px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border-color);
+        z-index: 1002;
+    }
+
+    .config-buttons-top.nav-open .nav-drawer {
+        display: flex;
+    }
+
     .config-btn {
-        top: 10px;
-        left: 10px;
-        padding: 10px 15px;
+        padding: 12px 16px;
         font-size: 0.9rem;
+        white-space: normal;
     }
 
     .config-container {

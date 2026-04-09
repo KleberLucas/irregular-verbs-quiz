@@ -1249,8 +1249,65 @@ function getActiveVerbs() {
     return verbs.filter((_, index) => activeVerbs.has(index));
 }
 
+function closeNavDrawer() {
+    const top = document.getElementById('top-nav');
+    const hamburger = document.getElementById('nav-hamburger');
+    const backdrop = document.getElementById('nav-backdrop');
+    if (top) top.classList.remove('nav-open');
+    if (hamburger) {
+        hamburger.setAttribute('aria-expanded', 'false');
+    }
+    if (backdrop) {
+        backdrop.classList.remove('visible');
+        backdrop.setAttribute('aria-hidden', 'true');
+    }
+}
+
+function toggleNavDrawer() {
+    const top = document.getElementById('top-nav');
+    const hamburger = document.getElementById('nav-hamburger');
+    const backdrop = document.getElementById('nav-backdrop');
+    if (!top || !hamburger) return;
+    const open = !top.classList.contains('nav-open');
+    if (open) {
+        top.classList.add('nav-open');
+        hamburger.setAttribute('aria-expanded', 'true');
+        if (backdrop) {
+            backdrop.classList.add('visible');
+            backdrop.setAttribute('aria-hidden', 'false');
+        }
+    } else {
+        closeNavDrawer();
+    }
+}
+
+const QUIZ_SCREEN_IDS = [
+    'quiz-mode1',
+    'quiz-mode2',
+    'quiz-mode3',
+    'prepositional-quiz-mode1',
+    'prepositional-quiz-mode2',
+    'prepositional-quiz-mode3'
+];
+
+function updateTopNavState() {
+    const backBtn = document.getElementById('btn-back-category');
+    if (!backBtn) return;
+    const inQuiz = QUIZ_SCREEN_IDS.some(id => {
+        const el = document.getElementById(id);
+        return el && el.classList.contains('active');
+    });
+    backBtn.hidden = !inQuiz;
+}
+
+function goToCategoryStart() {
+    closeNavDrawer();
+    goToMenu();
+}
+
 // Abrir tela de configuração
 function openVerbConfig() {
+    closeNavDrawer();
     document.getElementById('menu').classList.remove('active');
     document.getElementById('quiz-mode1').classList.remove('active');
     document.getElementById('quiz-mode2').classList.remove('active');
@@ -1259,12 +1316,14 @@ function openVerbConfig() {
     
     renderVerbsTable();
     updateVerbCount();
+    updateTopNavState();
 }
 
 // Fechar tela de configuração
 function closeVerbConfig() {
     document.getElementById('verb-config').classList.remove('active');
     document.getElementById('menu').classList.add('active');
+    updateTopNavState();
 }
 
 // Renderizar tabela de verbos
@@ -1382,6 +1441,7 @@ function getActivePrepositionalVerbs() {
 
 // Abrir tela de configuração de Prepositional Verbs
 function openPrepositionalVerbConfig() {
+    closeNavDrawer();
     document.getElementById('menu').classList.remove('active');
     document.getElementById('prepositional-quiz-mode1').classList.remove('active');
     document.getElementById('prepositional-quiz-mode2').classList.remove('active');
@@ -1391,12 +1451,14 @@ function openPrepositionalVerbConfig() {
     
     renderPrepositionalVerbsTable();
     updatePrepositionalVerbCount();
+    updateTopNavState();
 }
 
 // Fechar tela de configuração de Prepositional Verbs
 function closePrepositionalVerbConfig() {
     document.getElementById('prepositional-verb-config').classList.remove('active');
     document.getElementById('menu').classList.add('active');
+    updateTopNavState();
 }
 
 // Renderizar tabela de Prepositional Verbs
@@ -1521,6 +1583,7 @@ function startPrepositionalQuiz(mode) {
         document.getElementById('prepositional-quiz-mode3').classList.add('active');
         initializePrepositionalFlashcards();
     }
+    updateTopNavState();
 }
 
 // Função para normalizar respostas (remover espaços, converter para minúsculas, lidar com alternativas)
@@ -1738,6 +1801,7 @@ function startQuiz(mode) {
         document.getElementById('quiz-mode3').classList.add('active');
         initializeFlashcards();
     }
+    updateTopNavState();
 }
 
 // Carregar pergunta Modo 1
@@ -1929,6 +1993,7 @@ function showResults() {
     document.getElementById('quiz-mode1').classList.remove('active');
     document.getElementById('quiz-mode2').classList.remove('active');
     document.getElementById('results').classList.add('active');
+    updateTopNavState();
     
     const total = results.correct + results.wrong;
     const percentage = total > 0 ? Math.round((results.correct / total) * 100) : 0;
@@ -1972,6 +2037,7 @@ function showResults() {
 
 // Voltar ao menu
 function goToMenu() {
+    closeNavDrawer();
     document.getElementById('results').classList.remove('active');
     document.getElementById('quiz-mode1').classList.remove('active');
     document.getElementById('quiz-mode2').classList.remove('active');
@@ -1982,6 +2048,7 @@ function goToMenu() {
     document.getElementById('prepositional-quiz-mode3').classList.remove('active');
     document.getElementById('prepositional-verb-config').classList.remove('active');
     document.getElementById('menu').classList.add('active');
+    updateTopNavState();
 }
 
 // Reiniciar quiz
@@ -2232,6 +2299,7 @@ function updateFlashcardStats() {
 function showFlashcardResults() {
     document.getElementById('quiz-mode3').classList.remove('active');
     document.getElementById('results').classList.add('active');
+    updateTopNavState();
     
     // Calcular estatísticas
     const totalReviewed = Object.keys(flashcardData).filter(index => {
@@ -2610,6 +2678,7 @@ function updatePrepositionalFlashcardStats() {
 function showPrepositionalFlashcardResults() {
     document.getElementById('prepositional-quiz-mode3').classList.remove('active');
     document.getElementById('results').classList.add('active');
+    updateTopNavState();
     
     const totalReviewed = Object.keys(prepositionalFlashcardData).filter(index => {
         const data = prepositionalFlashcardData[index];
@@ -2628,6 +2697,7 @@ function showPrepositionalResults() {
     document.getElementById('prepositional-quiz-mode1').classList.remove('active');
     document.getElementById('prepositional-quiz-mode2').classList.remove('active');
     document.getElementById('results').classList.add('active');
+    updateTopNavState();
     
     const total = prepositionalResults.correct + prepositionalResults.wrong;
     const percentage = total > 0 ? Math.round((prepositionalResults.correct / total) * 100) : 0;
@@ -2671,3 +2741,18 @@ loadFlashcardData();
 // Prepositional Verbs já estão carregados na constante acima
 loadActivePrepositionalVerbs();
 loadPrepositionalFlashcardData();
+
+(function initTopNav() {
+    const hamburger = document.getElementById('nav-hamburger');
+    const backdrop = document.getElementById('nav-backdrop');
+    if (hamburger) {
+        hamburger.addEventListener('click', () => toggleNavDrawer());
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', () => closeNavDrawer());
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeNavDrawer();
+    });
+    updateTopNavState();
+})();
