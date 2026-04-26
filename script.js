@@ -1200,6 +1200,7 @@ let prepositionalVerbs = prepositionalVerbsRaw.map(item => {
     };
 });
 
+let lastQuizCategory = 'irregular'; // 'irregular' | 'prepositional' | 'phrasal' — usado em Refazer Quiz
 let currentMode = null;
 let currentIndex = 0;
 let shuffledVerbs = [];
@@ -1287,7 +1288,11 @@ const QUIZ_SCREEN_IDS = [
     'quiz-mode3',
     'prepositional-quiz-mode1',
     'prepositional-quiz-mode2',
-    'prepositional-quiz-mode3'
+    'prepositional-quiz-mode3',
+    'phrasal-quiz-mode1',
+    'phrasal-quiz-mode2',
+    'phrasal-quiz-mode3',
+    'phrasal-quiz-mode4'
 ];
 
 function updateTopNavState() {
@@ -1311,7 +1316,13 @@ function openVerbConfig() {
     document.getElementById('menu').classList.remove('active');
     document.getElementById('quiz-mode1').classList.remove('active');
     document.getElementById('quiz-mode2').classList.remove('active');
+    document.getElementById('quiz-mode3').classList.remove('active');
     document.getElementById('results').classList.remove('active');
+    document.getElementById('phrasal-verb-config')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode1')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode2')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode3')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode4')?.classList.remove('active');
     document.getElementById('verb-config').classList.add('active');
     
     renderVerbsTable();
@@ -1447,6 +1458,11 @@ function openPrepositionalVerbConfig() {
     document.getElementById('prepositional-quiz-mode2').classList.remove('active');
     document.getElementById('prepositional-quiz-mode3').classList.remove('active');
     document.getElementById('results').classList.remove('active');
+    document.getElementById('phrasal-verb-config')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode1')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode2')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode3')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode4')?.classList.remove('active');
     document.getElementById('prepositional-verb-config').classList.add('active');
     
     renderPrepositionalVerbsTable();
@@ -1543,6 +1559,7 @@ function savePrepositionalVerbConfig() {
 
 // Iniciar quiz de Prepositional Verbs
 function startPrepositionalQuiz(mode) {
+    lastQuizCategory = 'prepositional';
     currentPrepositionalMode = mode;
     currentPrepositionalIndex = 0;
     prepositionalResults = {
@@ -1750,6 +1767,7 @@ function generateMisleadingOptions(correctAnswer, verbInfinitivo) {
 
 // Iniciar quiz
 function startQuiz(mode) {
+    lastQuizCategory = 'irregular';
     currentMode = mode;
     currentIndex = 0;
     results = {
@@ -2047,13 +2065,24 @@ function goToMenu() {
     document.getElementById('prepositional-quiz-mode2').classList.remove('active');
     document.getElementById('prepositional-quiz-mode3').classList.remove('active');
     document.getElementById('prepositional-verb-config').classList.remove('active');
+    document.getElementById('phrasal-verb-config')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode1')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode2')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode3')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode4')?.classList.remove('active');
     document.getElementById('menu').classList.add('active');
     updateTopNavState();
 }
 
 // Reiniciar quiz
 function restartQuiz() {
-    startQuiz(currentMode);
+    if (lastQuizCategory === 'prepositional') {
+        startPrepositionalQuiz(currentPrepositionalMode);
+    } else if (lastQuizCategory === 'phrasal') {
+        startPhrasalQuiz(currentPhrasalMode);
+    } else {
+        startQuiz(currentMode);
+    }
 }
 
 // Sistema de Flashcards (Modo 3)
@@ -2735,12 +2764,810 @@ function showPrepositionalResults() {
     }
 }
 
+// ========== PHRASAL VERBS ==========
+
+function getPhrasalVerbsList() {
+    return typeof phrasalVerbs !== 'undefined' && Array.isArray(phrasalVerbs) ? phrasalVerbs : [];
+}
+
+let currentPhrasalMode = null;
+let currentPhrasalIndex = 0;
+let shuffledPhrasalVerbs = [];
+let phrasalResults = {
+    correct: 0,
+    wrong: 0,
+    errors: []
+};
+
+let activePhrasalVerbs = new Set();
+
+function loadActivePhrasalVerbs() {
+    const list = getPhrasalVerbsList();
+    const saved = localStorage.getItem('activePhrasalVerbs');
+    if (saved) {
+        try {
+            const indices = JSON.parse(saved);
+            activePhrasalVerbs = new Set(indices.filter(i => i >= 0 && i < list.length));
+        } catch (e) {
+            activePhrasalVerbs = new Set(list.map((_, index) => index));
+        }
+    } else {
+        activePhrasalVerbs = new Set(list.map((_, index) => index));
+    }
+}
+
+function saveActivePhrasalVerbs() {
+    localStorage.setItem('activePhrasalVerbs', JSON.stringify(Array.from(activePhrasalVerbs)));
+}
+
+function getActivePhrasalVerbs() {
+    const list = getPhrasalVerbsList();
+    return list
+        .map((item, index) => ({ ...item, _idx: index }))
+        .filter((_, index) => activePhrasalVerbs.has(index));
+}
+
+function getPhrasalImageUrl(index) {
+    if (typeof phrasalVerbImagePaths === 'undefined' || phrasalVerbImagePaths == null) return '';
+    const path = phrasalVerbImagePaths[index] ?? phrasalVerbImagePaths[String(index)];
+    return typeof path === 'string' && path.trim() ? path.trim() : '';
+}
+
+function escapeHtml(str) {
+    if (str == null) return '';
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+}
+
+function normalizePhrasalAnswer(s) {
+    if (!s) return '';
+    return s.toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+/** Token de objeto/pessoa genérico (pode omitir-se na digitação, no fim ou no meio, ex.: turn something on → turn on). */
+function isPlaceholderSlotToken(token) {
+    if (!token) return false;
+    const t = token.toLowerCase();
+    const singles = [
+        'something', 'someone', 'somebody', 'somewhere', 'sometime',
+        'somewhat', 'someday', 'someway', 'someplace'
+    ];
+    if (singles.includes(t)) return true;
+    if (/^some(one|body|thing)(\/some(one|body|thing))?$/i.test(t)) return true;
+    if (/^(him|her|them|it|you|me|us|one)(\/(him|her|them|it|you|me|us|one))?$/i.test(t)) return true;
+    return false;
+}
+
+/**
+ * Formas aceites para digitação: frase completa, expansão da última palavra com /
+ * (ex.: get along/on → get along | get on), e remoção de someone/something/etc.
+ * em qualquer posição (ex.: turn something on → turn on).
+ */
+function buildAcceptablePhrasalSet(canonicalPhrase) {
+    const results = new Set();
+
+    function addSlashExpansions(phrase) {
+        const p = normalizePhrasalAnswer(phrase);
+        if (!p || results.has(p)) return;
+        results.add(p);
+        const words = p.split(' ').filter(Boolean);
+        if (words.length === 0) return;
+        const last = words[words.length - 1];
+        if (last.includes('/') && !isPlaceholderSlotToken(last)) {
+            const alts = last.split('/').map(a => a.trim()).filter(Boolean);
+            const prefix = words.slice(0, -1);
+            alts.forEach(alt => {
+                addSlashExpansions([...prefix, alt].join(' '));
+            });
+        }
+    }
+
+    addSlashExpansions(canonicalPhrase);
+
+    const queue = [...results].map(p => normalizePhrasalAnswer(p).split(' ').filter(Boolean));
+    const seenArr = new Set(queue.map(w => w.join(' ')));
+
+    while (queue.length) {
+        const w = queue.shift();
+        const key = w.join(' ');
+        results.add(key);
+
+        for (let i = 0; i < w.length; i++) {
+            if (!isPlaceholderSlotToken(w[i])) continue;
+            const next = [...w.slice(0, i), ...w.slice(i + 1)];
+            if (next.length === 0) continue;
+            const nk = next.join(' ');
+            if (!seenArr.has(nk)) {
+                seenArr.add(nk);
+                queue.push(next);
+            }
+        }
+    }
+
+    return results;
+}
+
+function checkPhrasalAnswer(userAnswer, correctPhrase) {
+    const nu = normalizePhrasalAnswer(userAnswer);
+    if (!nu) return false;
+    const acceptable = buildAcceptablePhrasalSet(correctPhrase);
+    return acceptable.has(nu);
+}
+
+/** Múltipla escolha: só conta acerto se coincidir com o texto canónico do botão certo. */
+function checkPhrasalAnswerStrict(userAnswer, correctPhrase) {
+    return normalizePhrasalAnswer(userAnswer) === normalizePhrasalAnswer(correctPhrase);
+}
+
+function pickPhrasalMultipleChoiceOptions(correctItem, pool) {
+    const correct = correctItem.phrasalVerb;
+    const nc = normalizePhrasalAnswer(correct);
+    const acceptableCorrect = buildAcceptablePhrasalSet(correct);
+    const options = new Set([correct]);
+
+    const isBadDistractor = o => {
+        const no = normalizePhrasalAnswer(o);
+        if (no === nc) return true;
+        if (acceptableCorrect.has(no)) return true;
+        return false;
+    };
+
+    const fromPool = pool.filter(p => p._idx !== correctItem._idx).map(p => p.phrasalVerb);
+    const fromAll = getPhrasalVerbsList().map(p => p.phrasalVerb);
+    const distractorPool = shuffleArray([...new Set([...fromPool, ...fromAll])]);
+
+    for (let i = 0; i < distractorPool.length && options.size < 4; i++) {
+        const o = distractorPool[i];
+        if (!isBadDistractor(o)) {
+            options.add(o);
+        }
+    }
+
+    let guard = 0;
+    while (options.size < 4 && guard++ < 500) {
+        const random = fromAll[Math.floor(Math.random() * fromAll.length)];
+        if (!isBadDistractor(random)) {
+            options.add(random);
+        }
+    }
+
+    return shuffleArray(Array.from(options));
+}
+
+function openPhrasalVerbConfig() {
+    closeNavDrawer();
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('quiz-mode1').classList.remove('active');
+    document.getElementById('quiz-mode2').classList.remove('active');
+    document.getElementById('quiz-mode3').classList.remove('active');
+    document.getElementById('verb-config').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode1').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode2').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode3').classList.remove('active');
+    document.getElementById('prepositional-verb-config').classList.remove('active');
+    document.getElementById('phrasal-quiz-mode1')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode2')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode3')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode4')?.classList.remove('active');
+    document.getElementById('results').classList.remove('active');
+    document.getElementById('phrasal-verb-config').classList.add('active');
+
+    renderPhrasalVerbsTable();
+    updatePhrasalVerbCount();
+    updateTopNavState();
+}
+
+function closePhrasalVerbConfig() {
+    document.getElementById('phrasal-verb-config').classList.remove('active');
+    document.getElementById('menu').classList.add('active');
+    updateTopNavState();
+}
+
+function renderPhrasalVerbsTable() {
+    const tbody = document.getElementById('phrasal-verbs-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    const list = getPhrasalVerbsList();
+
+    list.forEach((item, index) => {
+        const row = document.createElement('tr');
+        const isActive = activePhrasalVerbs.has(index);
+        const imgPath = getPhrasalImageUrl(index);
+        const pathCell = imgPath
+            ? `<code class="phrasal-path-code">${escapeHtml(imgPath)}</code>
+               <div class="phrasal-config-preview-wrap">
+                 <img class="phrasal-row-preview phrasal-row-preview--inline" alt="" src="${escapeHtml(imgPath)}">
+               </div>`
+            : `<span class="phrasal-path-missing">—</span>`;
+
+        row.innerHTML = `
+            <td class="checkbox-col">
+                <input type="checkbox"
+                    ${isActive ? 'checked' : ''}
+                    onchange="togglePhrasalVerb(${index}, this.checked)">
+            </td>
+            <td class="phrasal-index-col"><code>${index}</code></td>
+            <td>${escapeHtml(item.phrasalVerb)}</td>
+            <td>${escapeHtml(item.significado)}</td>
+            <td class="phrasal-image-code-cell">${pathCell}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    const allChecked = list.length > 0 && list.every((_, index) => activePhrasalVerbs.has(index));
+    const selAll = document.getElementById('select-all-phrasal-checkbox');
+    if (selAll) selAll.checked = allChecked;
+}
+
+function togglePhrasalVerb(index, isActive) {
+    if (isActive) {
+        activePhrasalVerbs.add(index);
+    } else {
+        activePhrasalVerbs.delete(index);
+    }
+    updatePhrasalVerbCount();
+    const list = getPhrasalVerbsList();
+    const allChecked = list.length > 0 && list.every((_, i) => activePhrasalVerbs.has(i));
+    const selAll = document.getElementById('select-all-phrasal-checkbox');
+    if (selAll) selAll.checked = allChecked;
+}
+
+function toggleAllPhrasalVerbs(checked) {
+    const list = getPhrasalVerbsList();
+    if (checked) {
+        list.forEach((_, index) => activePhrasalVerbs.add(index));
+    } else {
+        activePhrasalVerbs.clear();
+    }
+    renderPhrasalVerbsTable();
+    updatePhrasalVerbCount();
+}
+
+function selectAllPhrasalVerbs() {
+    getPhrasalVerbsList().forEach((_, index) => activePhrasalVerbs.add(index));
+    renderPhrasalVerbsTable();
+    updatePhrasalVerbCount();
+}
+
+function deselectAllPhrasalVerbs() {
+    activePhrasalVerbs.clear();
+    renderPhrasalVerbsTable();
+    updatePhrasalVerbCount();
+}
+
+function updatePhrasalVerbCount() {
+    const el = document.getElementById('phrasal-verb-count');
+    if (!el) return;
+    const count = activePhrasalVerbs.size;
+    el.textContent = `${count} phrasal verb${count !== 1 ? 's' : ''} ativo${count !== 1 ? 's' : ''}`;
+}
+
+function savePhrasalVerbConfig() {
+    saveActivePhrasalVerbs();
+    closePhrasalVerbConfig();
+    alert(`Configuração salva! ${activePhrasalVerbs.size} phrasal verb${activePhrasalVerbs.size !== 1 ? 's' : ''} ativo${activePhrasalVerbs.size !== 1 ? 's' : ''}.`);
+}
+
+function startPhrasalQuiz(mode) {
+    lastQuizCategory = 'phrasal';
+    currentPhrasalMode = mode;
+    currentPhrasalIndex = 0;
+    phrasalResults = {
+        correct: 0,
+        wrong: 0,
+        errors: []
+    };
+
+    document.getElementById('menu').classList.remove('active');
+    document.getElementById('quiz-mode1').classList.remove('active');
+    document.getElementById('quiz-mode2').classList.remove('active');
+    document.getElementById('quiz-mode3').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode1').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode2').classList.remove('active');
+    document.getElementById('prepositional-quiz-mode3').classList.remove('active');
+    document.getElementById('phrasal-quiz-mode1')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode2')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode3')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode4')?.classList.remove('active');
+    document.getElementById('results').classList.remove('active');
+
+    const activeList = getActivePhrasalVerbs();
+
+    if (mode === 1 || mode === 2) {
+        if (activeList.length === 0) {
+            alert('Por favor, ative pelo menos um phrasal verb na configuração antes de iniciar o quiz.');
+            openPhrasalVerbConfig();
+            return;
+        }
+        shuffledPhrasalVerbs = shuffleArray([...activeList]);
+        if (mode === 1) {
+            document.getElementById('phrasal-quiz-mode1').classList.add('active');
+            loadPhrasalQuestionMode1();
+        } else {
+            document.getElementById('phrasal-quiz-mode2').classList.add('active');
+            loadPhrasalQuestionMode2();
+        }
+    } else if (mode === 3) {
+        document.getElementById('phrasal-quiz-mode3').classList.add('active');
+        initializePhrasalFlashcards();
+    } else if (mode === 4) {
+        const withImages = activeList.filter(item => getPhrasalImageUrl(item._idx));
+        if (withImages.length === 0) {
+            alert('Nenhum phrasal verb ativo tem imagem no código. Em phrasal_verbs.js, preencha phrasalVerbImagePaths (índice → caminho em imgs/) e coloque os ficheiros na pasta imgs/. Depois marque os itens como ativos em Configurar Phrasal Verbs.');
+            openPhrasalVerbConfig();
+            return;
+        }
+        shuffledPhrasalVerbs = shuffleArray([...withImages]);
+        document.getElementById('phrasal-quiz-mode4').classList.add('active');
+        loadPhrasalQuestionMode4();
+    }
+    updateTopNavState();
+}
+
+function loadPhrasalQuestionMode1() {
+    if (currentPhrasalIndex >= shuffledPhrasalVerbs.length) {
+        showPhrasalResults();
+        return;
+    }
+    const item = shuffledPhrasalVerbs[currentPhrasalIndex];
+    document.getElementById('phrasal-significado1').textContent = item.significado;
+    document.getElementById('phrasal-exemplo1').textContent = item.exemplo ? `Ex.: ${item.exemplo}` : '';
+
+    const input = document.getElementById('phrasal-input1');
+    input.value = '';
+    input.classList.remove('correct', 'incorrect');
+
+    document.getElementById('phrasal-counter1').textContent =
+        `${currentPhrasalIndex + 1} / ${shuffledPhrasalVerbs.length}`;
+    const progress = ((currentPhrasalIndex + 1) / shuffledPhrasalVerbs.length) * 100;
+    document.getElementById('phrasal-progress1').style.width = progress + '%';
+    input.focus();
+}
+
+function loadPhrasalQuestionMode2() {
+    if (currentPhrasalIndex >= shuffledPhrasalVerbs.length) {
+        showPhrasalResults();
+        return;
+    }
+    const item = shuffledPhrasalVerbs[currentPhrasalIndex];
+    document.getElementById('phrasal-significado2').textContent = item.significado;
+    document.getElementById('phrasal-exemplo2').textContent = item.exemplo ? `Ex.: ${item.exemplo}` : '';
+
+    const optionPhrases = pickPhrasalMultipleChoiceOptions(item, getActivePhrasalVerbs());
+    const container = document.getElementById('phrasal-options-container');
+    container.innerHTML = '';
+    optionPhrases.forEach(phrase => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = phrase;
+        btn.onclick = () => selectPhrasalOption(btn, phrase, item);
+        container.appendChild(btn);
+    });
+
+    document.getElementById('phrasal-counter2').textContent =
+        `${currentPhrasalIndex + 1} / ${shuffledPhrasalVerbs.length}`;
+    const progress = ((currentPhrasalIndex + 1) / shuffledPhrasalVerbs.length) * 100;
+    document.getElementById('phrasal-progress2').style.width = progress + '%';
+}
+
+function selectPhrasalOption(button, selectedPhrase, item) {
+    const buttons = document.querySelectorAll('#phrasal-options-container .option-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.onclick = null;
+    });
+
+    const isCorrect = checkPhrasalAnswerStrict(selectedPhrase, item.phrasalVerb);
+    if (isCorrect) {
+        button.classList.add('correct');
+        phrasalResults.correct++;
+    } else {
+        button.classList.add('incorrect');
+        phrasalResults.wrong++;
+        buttons.forEach(btn => {
+            if (checkPhrasalAnswerStrict(btn.textContent, item.phrasalVerb)) {
+                btn.classList.add('correct');
+            }
+        });
+        phrasalResults.errors.push({
+            label: item.phrasalVerb,
+            significado: item.significado,
+            userAnswer: selectedPhrase,
+            correctAnswer: item.phrasalVerb
+        });
+    }
+
+    setTimeout(() => {
+        currentPhrasalIndex++;
+        loadPhrasalQuestionMode2();
+    }, 1500);
+}
+
+function loadPhrasalQuestionMode4() {
+    if (currentPhrasalIndex >= shuffledPhrasalVerbs.length) {
+        showPhrasalResults();
+        return;
+    }
+    const item = shuffledPhrasalVerbs[currentPhrasalIndex];
+    const url = getPhrasalImageUrl(item._idx);
+    const imgEl = document.getElementById('phrasal-quiz-image');
+    imgEl.src = url;
+    imgEl.alt = `Ilustração: ${item.phrasalVerb}`;
+
+    const correctionEl = document.getElementById('phrasal-mode4-correction');
+    if (correctionEl) {
+        correctionEl.hidden = true;
+        correctionEl.innerHTML = '';
+    }
+
+    const input = document.getElementById('phrasal-input4');
+    input.value = '';
+    input.classList.remove('correct', 'incorrect');
+
+    document.getElementById('phrasal-counter4').textContent =
+        `${currentPhrasalIndex + 1} / ${shuffledPhrasalVerbs.length}`;
+    const progress = ((currentPhrasalIndex + 1) / shuffledPhrasalVerbs.length) * 100;
+    document.getElementById('phrasal-progress4').style.width = progress + '%';
+    input.focus();
+}
+
+function showPhrasalResults() {
+    document.getElementById('phrasal-quiz-mode1')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode2')?.classList.remove('active');
+    document.getElementById('phrasal-quiz-mode4')?.classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    updateTopNavState();
+
+    const total = phrasalResults.correct + phrasalResults.wrong;
+    const percentage = total > 0 ? Math.round((phrasalResults.correct / total) * 100) : 0;
+
+    document.getElementById('correct-answers').textContent = phrasalResults.correct;
+    document.getElementById('wrong-answers').textContent = phrasalResults.wrong;
+    document.getElementById('percentage').textContent = percentage + '%';
+    document.getElementById('total-questions').textContent = total;
+
+    const errorsList = document.getElementById('errors-list');
+    const errorsSection = document.getElementById('errors-section');
+
+    if (phrasalResults.errors.length === 0) {
+        errorsSection.style.display = 'none';
+    } else {
+        errorsSection.style.display = 'block';
+        errorsList.innerHTML = '';
+
+        phrasalResults.errors.forEach(error => {
+            const errorItem = document.createElement('div');
+            errorItem.className = 'error-item';
+            errorItem.innerHTML = `
+                <h3>${escapeHtml(error.label)} — ${escapeHtml(error.significado || '')}</h3>
+                <div class="error-details">
+                    <div class="error-detail">
+                        <strong>Sua resposta:</strong> ${escapeHtml(error.userAnswer)}
+                    </div>
+                    <div class="error-detail">
+                        <strong>Resposta correta:</strong> ${escapeHtml(error.correctAnswer)}
+                    </div>
+                </div>
+            `;
+            errorsList.appendChild(errorItem);
+        });
+    }
+}
+
+let phrasalFlashcardData = {};
+let phrasalFlashcardQueue = [];
+let currentPhrasalFlashcard = null;
+let phrasalFlashcardIsFlipped = false;
+let phrasalFailedCards = [];
+
+function loadPhrasalFlashcardData() {
+    const saved = localStorage.getItem('phrasalFlashcardData');
+    if (saved) {
+        try {
+            phrasalFlashcardData = JSON.parse(saved);
+            Object.keys(phrasalFlashcardData).forEach(index => {
+                if (phrasalFlashcardData[index].nextReview) {
+                    const d = new Date(phrasalFlashcardData[index].nextReview);
+                    d.setHours(0, 0, 0, 0);
+                    phrasalFlashcardData[index].nextReview = d;
+                }
+            });
+        } catch (e) {
+            phrasalFlashcardData = {};
+        }
+    }
+}
+
+function savePhrasalFlashcardData() {
+    const dataToSave = {};
+    Object.keys(phrasalFlashcardData).forEach(index => {
+        dataToSave[index] = { ...phrasalFlashcardData[index] };
+        if (dataToSave[index].nextReview instanceof Date) {
+            dataToSave[index].nextReview = dataToSave[index].nextReview.toISOString();
+        }
+    });
+    localStorage.setItem('phrasalFlashcardData', JSON.stringify(dataToSave));
+}
+
+function initializePhrasalFlashcards() {
+    loadPhrasalFlashcardData();
+    phrasalFlashcardIsFlipped = false;
+    phrasalFailedCards = [];
+
+    const list = getPhrasalVerbsList();
+    if (list.length === 0) {
+        alert('Lista de phrasal verbs não encontrada.');
+        goToMenu();
+        return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const newCards = [];
+    const reviewCards = [];
+
+    list.forEach((verb, index) => {
+        const data = phrasalFlashcardData[index] || {};
+        const nextReview = data.nextReview ? new Date(data.nextReview) : null;
+
+        if (!nextReview || nextReview <= today) {
+            if (!nextReview) {
+                newCards.push({ verb, index });
+            } else {
+                reviewCards.push({ verb, index });
+            }
+        }
+    });
+
+    phrasalFlashcardQueue = [
+        ...shuffleArray(newCards),
+        ...shuffleArray(reviewCards)
+    ];
+
+    updatePhrasalFlashcardStats();
+
+    if (phrasalFlashcardQueue.length === 0) {
+        alert('Parabéns! Não há cartões de phrasal verbs para revisar hoje.');
+        goToMenu();
+        return;
+    }
+
+    loadNextPhrasalFlashcard();
+}
+
+function loadNextPhrasalFlashcard() {
+    if (phrasalFlashcardQueue.length === 0 && phrasalFailedCards.length === 0) {
+        showPhrasalFlashcardResults();
+        return;
+    }
+
+    if (phrasalFlashcardQueue.length === 0 && phrasalFailedCards.length > 0) {
+        phrasalFlashcardQueue = [...phrasalFailedCards];
+        phrasalFailedCards = [];
+    }
+
+    const card = document.getElementById('phrasal-flashcard');
+    const wasFlipped = card.classList.contains('flipped');
+
+    if (wasFlipped) {
+        card.classList.remove('flipped');
+        phrasalFlashcardIsFlipped = false;
+        setTimeout(() => {
+            updatePhrasalFlashcardContent();
+        }, 600);
+    } else {
+        updatePhrasalFlashcardContent();
+    }
+}
+
+function updatePhrasalFlashcardContent() {
+    currentPhrasalFlashcard = phrasalFlashcardQueue.shift();
+    phrasalFlashcardIsFlipped = false;
+
+    const verb = currentPhrasalFlashcard.verb;
+    document.getElementById('phrasal-flashcard-significado').textContent = verb.significado;
+    document.getElementById('phrasal-flashcard-exemplo').textContent = verb.exemplo ? `Ex.: ${verb.exemplo}` : '';
+    document.getElementById('phrasal-flashcard-answer').textContent = verb.phrasalVerb;
+    document.getElementById('phrasal-flashcard-example-en').textContent = verb.exemplo || '—';
+
+    document.querySelectorAll('#phrasal-flashcard-actions .action-btn').forEach(btn => {
+        btn.disabled = false;
+    });
+
+    const remaining = phrasalFlashcardQueue.length + phrasalFailedCards.length;
+    const total = getPhrasalVerbsList().length;
+    document.getElementById('phrasal-flashcard-counter').textContent = `${total - remaining} / ${total}`;
+}
+
+function flipPhrasalCard() {
+    if (phrasalFlashcardIsFlipped) return;
+    const card = document.getElementById('phrasal-flashcard');
+    card.classList.add('flipped');
+    phrasalFlashcardIsFlipped = true;
+}
+
+function ratePhrasalCard(rating) {
+    if (!currentPhrasalFlashcard) return;
+
+    if (!phrasalFlashcardIsFlipped) {
+        flipPhrasalCard();
+        setTimeout(() => ratePhrasalCard(rating), 600);
+        return;
+    }
+
+    const index = currentPhrasalFlashcard.index;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let data = phrasalFlashcardData[index] || {
+        interval: 0,
+        easeFactor: 2.5,
+        reviewCount: 0
+    };
+
+    if (rating === 'again') {
+        phrasalFailedCards.push(currentPhrasalFlashcard);
+        data.interval = 0;
+        data.easeFactor = Math.max(1.3, data.easeFactor - 0.2);
+    } else {
+        if (rating === 'easy') {
+            data.interval = Math.max(data.interval * 2.5, 4);
+            data.easeFactor = Math.min(2.5, data.easeFactor + 0.15);
+        } else if (rating === 'good') {
+            if (data.interval === 0) {
+                data.interval = 1;
+            } else {
+                data.interval = Math.floor(data.interval * data.easeFactor);
+            }
+        } else if (rating === 'hard') {
+            if (data.interval === 0) {
+                data.interval = 0.5;
+            } else {
+                data.interval = Math.max(1, Math.floor(data.interval * 1.2));
+            }
+            data.easeFactor = Math.max(1.3, data.easeFactor - 0.15);
+        }
+
+        data.reviewCount = (data.reviewCount || 0) + 1;
+        const nextReview = new Date(today);
+        nextReview.setDate(nextReview.getDate() + Math.ceil(data.interval));
+        nextReview.setHours(0, 0, 0, 0);
+        data.nextReview = nextReview;
+    }
+
+    phrasalFlashcardData[index] = data;
+    savePhrasalFlashcardData();
+
+    document.querySelectorAll('#phrasal-flashcard-actions .action-btn').forEach(btn => {
+        btn.disabled = true;
+    });
+
+    setTimeout(() => {
+        loadNextPhrasalFlashcard();
+    }, 500);
+}
+
+function updatePhrasalFlashcardStats() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let newCount = 0;
+    let reviewCount = 0;
+
+    getPhrasalVerbsList().forEach((_, index) => {
+        const data = phrasalFlashcardData[index] || {};
+        const nextReview = data.nextReview ? new Date(data.nextReview) : null;
+
+        if (!nextReview) {
+            newCount++;
+        } else if (nextReview <= today) {
+            reviewCount++;
+        }
+    });
+
+    document.getElementById('phrasal-flashcard-stats').textContent =
+        `Novos: ${newCount} | Revisão: ${reviewCount}`;
+}
+
+function showPhrasalFlashcardResults() {
+    document.getElementById('phrasal-quiz-mode3').classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    updateTopNavState();
+
+    const totalReviewed = Object.keys(phrasalFlashcardData).filter(index => {
+        const data = phrasalFlashcardData[index];
+        return data && data.reviewCount > 0;
+    }).length;
+
+    document.getElementById('correct-answers').textContent = totalReviewed;
+    document.getElementById('wrong-answers').textContent = 0;
+    document.getElementById('percentage').textContent = '100%';
+    document.getElementById('total-questions').textContent = totalReviewed;
+    document.getElementById('errors-section').style.display = 'none';
+}
+
+document.getElementById('form-phrasal-mode1').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const item = shuffledPhrasalVerbs[currentPhrasalIndex];
+    const userAnswer = document.getElementById('phrasal-input1').value;
+    const isCorrect = checkPhrasalAnswer(userAnswer, item.phrasalVerb);
+
+    const input = document.getElementById('phrasal-input1');
+    if (isCorrect) {
+        input.classList.add('correct');
+        input.classList.remove('incorrect');
+        phrasalResults.correct++;
+    } else {
+        input.classList.add('incorrect');
+        input.classList.remove('correct');
+        phrasalResults.wrong++;
+        phrasalResults.errors.push({
+            label: item.phrasalVerb,
+            significado: item.significado,
+            userAnswer,
+            correctAnswer: item.phrasalVerb
+        });
+    }
+
+    setTimeout(() => {
+        currentPhrasalIndex++;
+        loadPhrasalQuestionMode1();
+    }, 1500);
+});
+
+document.getElementById('form-phrasal-mode4').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const item = shuffledPhrasalVerbs[currentPhrasalIndex];
+    const userAnswer = document.getElementById('phrasal-input4').value;
+    const isCorrect = checkPhrasalAnswer(userAnswer, item.phrasalVerb);
+
+    const input = document.getElementById('phrasal-input4');
+    const correctionEl = document.getElementById('phrasal-mode4-correction');
+
+    if (isCorrect) {
+        input.classList.add('correct');
+        input.classList.remove('incorrect');
+        if (correctionEl) {
+            correctionEl.hidden = true;
+            correctionEl.innerHTML = '';
+        }
+        phrasalResults.correct++;
+    } else {
+        input.classList.add('incorrect');
+        input.classList.remove('correct');
+        if (correctionEl) {
+            correctionEl.hidden = false;
+            correctionEl.innerHTML =
+                '<span>Resposta correta desta imagem:</span>' +
+                `<span class="phrasal-mode4-answer-en">${escapeHtml(item.phrasalVerb)}</span>` +
+                `<span class="phrasal-mode4-answer-pt">Tradução (significado): ${escapeHtml(item.significado)}</span>`;
+        }
+        phrasalResults.wrong++;
+        phrasalResults.errors.push({
+            label: item.phrasalVerb,
+            significado: item.significado,
+            userAnswer,
+            correctAnswer: item.phrasalVerb
+        });
+    }
+
+    const delayMs = isCorrect ? 1500 : 2800;
+    setTimeout(() => {
+        currentPhrasalIndex++;
+        loadPhrasalQuestionMode4();
+    }, delayMs);
+});
+
 // Inicializar sistema
 loadActiveVerbs();
 loadFlashcardData();
 // Prepositional Verbs já estão carregados na constante acima
 loadActivePrepositionalVerbs();
 loadPrepositionalFlashcardData();
+loadActivePhrasalVerbs();
+loadPhrasalFlashcardData();
 
 (function initTopNav() {
     const hamburger = document.getElementById('nav-hamburger');

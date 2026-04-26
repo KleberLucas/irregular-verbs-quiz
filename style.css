@@ -101,6 +101,19 @@ body {
     gap: 20px;
 }
 
+/* Menu: duas colunas no PC, uma coluna no celular */
+.menu-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 720px) {
+    .menu-buttons-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .quiz-btn {
     display: flex;
     align-items: center;
@@ -133,6 +146,102 @@ body {
 .quiz-btn.mode3 {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     color: white;
+}
+
+.quiz-btn.mode4 {
+    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    color: white;
+}
+
+.phrasal-image-quiz-display {
+    text-align: center;
+}
+
+.phrasal-quiz-image-wrap {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 120px;
+}
+
+.phrasal-mode4-correction {
+    margin-top: 12px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    border: 2px solid var(--error-color);
+    background: #fef2f2;
+    color: var(--text-primary);
+}
+
+.phrasal-mode4-correction strong {
+    color: var(--text-primary);
+}
+
+.phrasal-mode4-correction .phrasal-mode4-answer-en {
+    display: block;
+    margin-top: 8px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+.phrasal-mode4-correction .phrasal-mode4-answer-pt {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.phrasal-quiz-image {
+    max-width: 100%;
+    max-height: 280px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    background: #f3f4f6;
+}
+
+.phrasal-index-col {
+    width: 3rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.phrasal-image-code-cell {
+    max-width: 220px;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.phrasal-path-code {
+    display: block;
+    word-break: break-all;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+}
+
+.phrasal-path-missing {
+    color: var(--text-secondary);
+}
+
+.phrasal-config-preview-wrap {
+    margin-top: 4px;
+}
+
+.phrasal-row-preview--inline {
+    display: block;
+    max-width: 72px;
+    max-height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .btn-icon {
