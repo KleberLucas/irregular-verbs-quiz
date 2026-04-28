@@ -1139,3 +1139,71 @@ body {
         font-size: 1.5rem;
     }
 }
+
+@media (max-width: 768px) {
+    .config-container {
+        height: calc(100vh - 28px);
+        max-height: calc(100vh - 28px);
+        padding: 16px;
+    }
+
+    .config-header {
+        margin-bottom: 10px;
+    }
+
+    .config-title {
+        font-size: 1.3rem;
+        margin-bottom: 6px;
+    }
+
+    .config-subtitle {
+        font-size: 0.85rem;
+        line-height: 1.3;
+        margin: 0;
+    }
+
+    .config-actions {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .config-actions .btn-secondary {
+        padding: 9px 10px;
+        font-size: 0.85rem;
+    }
+
+    .verb-count {
+        font-size: 0.9rem;
+    }
+
+    .table-container {
+        margin-bottom: 10px;
+    }
+
+    .config-buttons {
+        gap: 10px;
+    }
+
+    .config-buttons .btn-primary,
+    .config-buttons .btn-secondary {
+        padding: 11px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .config-subtitle {
+        display: none;
+    }
+
+    .config-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: stretch;
+    }
+
+    .config-actions .verb-count {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+}

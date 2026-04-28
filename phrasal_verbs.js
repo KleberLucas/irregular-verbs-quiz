@@ -1052,10 +1052,7 @@ const phrasalVerbs = [
  * };
  */
 const phrasalVerbImagePaths = {
-    0: 'imgs/ask-someone-out.png',
-    1: 'imgs/ask-around.png',
-    2: 'imgs/add-up-to-something.png',
-    3: 'imgs/back-something-up.png',
+    
     74: 'imgs/find_out.png',
     89: 'imgs/get_up.png',
     98: 'imgs/give_up.png',

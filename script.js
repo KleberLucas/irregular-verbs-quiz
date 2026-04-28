@@ -2807,6 +2807,13 @@ function getActivePhrasalVerbs() {
         .filter((_, index) => activePhrasalVerbs.has(index));
 }
 
+function getPhrasalVerbsWithImages() {
+    const list = getPhrasalVerbsList();
+    return list
+        .map((item, index) => ({ ...item, _idx: index }))
+        .filter(item => Boolean(getPhrasalImageUrl(item._idx)));
+}
+
 function getPhrasalImageUrl(index) {
     if (typeof phrasalVerbImagePaths === 'undefined' || phrasalVerbImagePaths == null) return '';
     const path = phrasalVerbImagePaths[index] ?? phrasalVerbImagePaths[String(index)];
@@ -3092,10 +3099,10 @@ function startPhrasalQuiz(mode) {
         document.getElementById('phrasal-quiz-mode3').classList.add('active');
         initializePhrasalFlashcards();
     } else if (mode === 4) {
-        const withImages = activeList.filter(item => getPhrasalImageUrl(item._idx));
+        const withImages = getPhrasalVerbsWithImages();
         if (withImages.length === 0) {
-            alert('Nenhum phrasal verb ativo tem imagem no código. Em phrasal_verbs.js, preencha phrasalVerbImagePaths (índice → caminho em imgs/) e coloque os ficheiros na pasta imgs/. Depois marque os itens como ativos em Configurar Phrasal Verbs.');
-            openPhrasalVerbConfig();
+            alert('Nenhum phrasal verb com imagem foi encontrado no código. Em phrasal_verbs.js, preencha phrasalVerbImagePaths (índice → caminho em imgs/) e coloque os ficheiros na pasta imgs/.');
+            goToMenu();
             return;
         }
         shuffledPhrasalVerbs = shuffleArray([...withImages]);
