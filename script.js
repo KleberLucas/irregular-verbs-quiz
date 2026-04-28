@@ -2907,6 +2907,33 @@ function checkPhrasalAnswerStrict(userAnswer, correctPhrase) {
     return normalizePhrasalAnswer(userAnswer) === normalizePhrasalAnswer(correctPhrase);
 }
 
+function buildPhrasalMaskedExample(example, canonicalPhrase) {
+    const normalizedExample = typeof example === 'string' ? example.trim() : '';
+    if (!normalizedExample) return '';
+
+    const tokens = normalizePhrasalAnswer(canonicalPhrase)
+        .split(' ')
+        .filter(Boolean)
+        .filter(token => !isPlaceholderSlotToken(token));
+
+    if (tokens.length < 2) return '___';
+
+    const tailTokens = tokens.slice(1).filter(Boolean);
+    const escapedTail = tailTokens.map(token => token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    if (escapedTail.length === 0) return '___';
+
+    const betweenMax = tailTokens.length === 1 ? 4 : 2;
+    const pattern =
+        `\\b\\w+\\b(?:\\s+\\w+){0,${betweenMax}}?\\s+${escapedTail.join('\\s+')}` +
+        `(?:\\s+(?:someone|somebody|something|somewhere|someone/something|him|her|them|it|you|me|us|one))?\\b`;
+    const regex = new RegExp(pattern, 'i');
+
+    if (!regex.test(normalizedExample)) {
+        return '___';
+    }
+    return normalizedExample.replace(regex, '___');
+}
+
 function pickPhrasalMultipleChoiceOptions(correctItem, pool) {
     const correct = correctItem.phrasalVerb;
     const nc = normalizePhrasalAnswer(correct);
@@ -3119,7 +3146,8 @@ function loadPhrasalQuestionMode1() {
     }
     const item = shuffledPhrasalVerbs[currentPhrasalIndex];
     document.getElementById('phrasal-significado1').textContent = item.significado;
-    document.getElementById('phrasal-exemplo1').textContent = item.exemplo ? `Ex.: ${item.exemplo}` : '';
+    const maskedExample = buildPhrasalMaskedExample(item.exemplo, item.phrasalVerb);
+    document.getElementById('phrasal-exemplo1').textContent = maskedExample ? `Ex.: ${maskedExample}` : '';
 
     const input = document.getElementById('phrasal-input1');
     input.value = '';
@@ -3139,7 +3167,8 @@ function loadPhrasalQuestionMode2() {
     }
     const item = shuffledPhrasalVerbs[currentPhrasalIndex];
     document.getElementById('phrasal-significado2').textContent = item.significado;
-    document.getElementById('phrasal-exemplo2').textContent = item.exemplo ? `Ex.: ${item.exemplo}` : '';
+    const maskedExample = buildPhrasalMaskedExample(item.exemplo, item.phrasalVerb);
+    document.getElementById('phrasal-exemplo2').textContent = maskedExample ? `Ex.: ${maskedExample}` : '';
 
     const optionPhrases = pickPhrasalMultipleChoiceOptions(item, getActivePhrasalVerbs());
     const container = document.getElementById('phrasal-options-container');
@@ -3374,10 +3403,25 @@ function updatePhrasalFlashcardContent() {
     phrasalFlashcardIsFlipped = false;
 
     const verb = currentPhrasalFlashcard.verb;
+    const maskedExample = buildPhrasalMaskedExample(verb.exemplo, verb.phrasalVerb);
+    const imageUrl = getPhrasalImageUrl(currentPhrasalFlashcard.index);
     document.getElementById('phrasal-flashcard-significado').textContent = verb.significado;
-    document.getElementById('phrasal-flashcard-exemplo').textContent = verb.exemplo ? `Ex.: ${verb.exemplo}` : '';
+    document.getElementById('phrasal-flashcard-exemplo').textContent = maskedExample ? `Ex.: ${maskedExample}` : '';
     document.getElementById('phrasal-flashcard-answer').textContent = verb.phrasalVerb;
     document.getElementById('phrasal-flashcard-example-en').textContent = verb.exemplo || '—';
+    const flashcardImageWrap = document.getElementById('phrasal-flashcard-image-wrap');
+    const flashcardImage = document.getElementById('phrasal-flashcard-image');
+    if (flashcardImageWrap && flashcardImage) {
+        if (imageUrl) {
+            flashcardImage.src = imageUrl;
+            flashcardImage.alt = `Ilustração: ${verb.phrasalVerb}`;
+            flashcardImageWrap.hidden = false;
+        } else {
+            flashcardImage.src = '';
+            flashcardImage.alt = '';
+            flashcardImageWrap.hidden = true;
+        }
+    }
 
     document.querySelectorAll('#phrasal-flashcard-actions .action-btn').forEach(btn => {
         btn.disabled = false;
