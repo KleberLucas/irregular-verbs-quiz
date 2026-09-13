@@ -1052,6 +1052,8 @@ const phrasalVerbs = [
  * };
  */
 const phrasalVerbImagePaths = {
+    31: 'imgs/check_in.png',
+    32: 'imgs/check_out.png',
     43: 'imgs/come_from.png',
     81: 'imgs/get_back.png',
     74: 'imgs/find_out.png',
@@ -1061,10 +1063,14 @@ const phrasalVerbImagePaths = {
     102: 'imgs/go_ahead.png',
     103: 'imgs/go_back.png',
     104: 'imgs/go_out.png',
+    107: 'imgs/go_over.png',
     133: 'imgs/look_after.png',
     135: 'imgs/look_for.png',
+    161: 'imgs/put_on.png',
     166: 'imgs/run_out.png',
+    180: 'imgs/take_off.png',
     190: 'imgs/turn_off.png',
     191: 'imgs/turn_on.png',
+    197: 'imgs/wake_up.png',
 
 };
